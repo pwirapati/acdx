@@ -11,3 +11,5 @@ This is an R package for performing aggregation of single-cell expression profil
     - volcano plots
     - per-gene forest plots showing the aggregate summaries of top-ranking genes
     - heatmaps to compare the expression patterns of many genes of interest
+
+<a href="https://lausanne.sib.swiss/~pwirapat/acdx/tutorial.html">Tutorial</a>
