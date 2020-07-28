@@ -1,0 +1,12 @@
+Package: acdx
+Type: Package
+Title: Aggregated Cell Differential Expression
+Version: 0.0.1
+Date: 2000-12-31
+Depends: Matrix
+Author: Pratyaksha Wirapati
+Maintainer: Pratyaksha Wirapati <pratyaksha.wirapati@sib.swiss>
+Description: Differential expression analysis for aggregated (averaged) single cell gene expression
+License: GPL
+Packaged: 2020-07-27 21:37:53 UTC; pwirapat
+NeedsCompilation: yes

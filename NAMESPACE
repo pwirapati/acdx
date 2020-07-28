@@ -1,0 +1,9 @@
+useDynLib(acdx)
+import(Matrix)
+export(quest)
+export(acplot,log_axt,logit_axt)
+export(aggr)
+
+export(cfactor,acdx)
+
+exportPattern("Romp_")
