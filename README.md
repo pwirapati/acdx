@@ -8,8 +8,6 @@ This is an R package for performing aggregation of single-cell expression profil
 4. Query the fitted models using various _interest functionals_. This is a generalization of _linear contrasts_ which can use non-linear functionals of the parameter space. A ranked gene list is produced, together with the significance statistics (FWER and FDP) that take into accounts multiple testing in the presence of dependence in genes and aggregates.
 5. Visualize and interprete the ranked genes for a given query:
     - "top" table (similar to that of `limma`)
-    - volcano plots
     - per-gene forest plots showing the aggregate summaries of top-ranking genes
-    - heatmaps to compare the expression patterns of many genes of interest
 
 <a href="http://lausanne.sib.swiss/~pwirapat/acdx/tutorial.html">Tutorial</a>
