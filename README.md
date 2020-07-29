@@ -1,4 +1,4 @@
-# AC&#x1F5F2;DX: Aggregated Cells Differential eXpression
+# AC&#x26A1;DX: Aggregated Cells Differential eXpression
 
 This is an R package for performing aggregation of single-cell expression profiles and rank genes based on specified patterns of changes in expression across combinations of cell types and conditions.
 
