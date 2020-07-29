@@ -11,3 +11,5 @@ This is an R package for performing aggregation of single-cell expression profil
     - per-gene forest plots showing the aggregate summaries of top-ranking genes
 
 <a href="http://lausanne.sib.swiss/~pwirapat/acdx/tutorial.html">Tutorial</a>
+
+[test](inst/doc/tutorial.html)
