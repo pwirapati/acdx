@@ -6,8 +6,8 @@ logit_axt <- c("0.01","0.05","0.1","0.25","0.5","0.75","0.9","0.95","0.99")
 
 acplot <- function( ac , gene, o=NULL, xf=function(x)log(x+.5),
   col.key = NULL, col.map = NULL,
-  pch=20, cex=NULL,
-  xt.key=NULL,xt.key2=NULL,bar=FALSE,
+  pch=20, cex=NULL,bar=FALSE,
+  xt.key=NULL,xt.key2=NULL,
   ...
 )
 {
@@ -33,7 +33,7 @@ acplot <- function( ac , gene, o=NULL, xf=function(x)log(x+.5),
     xlab="",ylab="ave. counts", main=gene, 
     col=col,pch=pch,cex=cex,
     ... )
-  axis(side=2,at=xf(as.numeric(log_axt)),lab=log_axt,las=2)
+  axis(side=2,at=xf(as.numeric(log_axt)),labels=log_axt,las=2)
   if(!is.null(xt.key))
     {
     mtext( xt$values, at=cumsum(xt$lengths)-xt$lengths/2,side=1,line=1.5)

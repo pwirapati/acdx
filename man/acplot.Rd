@@ -7,7 +7,8 @@
   acplot( ac , gene, o=NULL, xf=function(x)log(x+.5),
     col.key = NULL, col.map = NULL,
     pch=20, cex=NULL,
-    xt.key=NULL,xt.key2=NULL,bar=FALSE,
+    bar=FALSE,
+    xt.key=NULL,xt.key2=NULL,
     ...)
 }
 \arguments{
@@ -22,6 +23,12 @@
   \item{xt.key}{Horizontal axis label (a column name in \code{ac}
   object annotation)}
   \item{xt.key2}{2nd horizontal axis label}
+  \item{pch}{Point type, see \code{\link{plot.default}}}
+  \item{cex}{The size of the points, defaults to semi-quantitative
+    function of the number of cells per aggregate}
+  \item{bar}{Show 95-percent confidence bar of the aggregate
+    data, based on normal approximation
+    in the log scale}
   \item{...}{Other options to \code{plot}}
 }
 \details{

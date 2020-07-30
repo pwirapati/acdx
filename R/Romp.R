@@ -16,7 +16,7 @@ Romp_set_num_threads <- function(nthreads)
   .C("Romp_set_num_threads",as.integer(nthreads),
     PACKAGE="acdx")[[1]]
 
-Romp_schedules <- c("static","dynamic","guided","auto")
+schedules <- c("static","dynamic","guided","auto")
 
 # Return the kind of schedule and chunksize
 #
@@ -24,17 +24,17 @@ Romp_get_schedule <- function()
 {
   ret <- .C("Romp_get_schedule",
     kind=integer(1),chunk_size=integer(1),PACKAGE="acdx")
-  ret$kind <- Romp_schedules[ret$kind]
+  ret$kind <- schedules[ret$kind]
   ret
 }
 
 Romp_set_schedule <- function(kind,chunk_size=0)
 {
-  k <- pmatch(kind,Romp_schedules)
+  k <- pmatch(kind,schedules)
   if(is.na(k)) stop("unknown kind of schedule")
   ret <- .C("Romp_set_schedule",
     kind=as.integer(k),chunk_size=as.integer(chunk_size),
     PACKAGE="acdx")
-  ret$kind <- Romp_schedules[ret$kind]
+  ret$kind <- schedules[ret$kind]
   ret
 }

@@ -12,9 +12,15 @@ runtime parameters}
 \usage{
   Romp_get_num_procs()
   Romp_get_max_threads()
-  Romp_set_num_threads(n)
+  Romp_set_num_threads(nthreads)
   Romp_get_schedule()
   Romp_set_schedule(kind,chunk_size)
+}
+\arguments{
+  \item{nthreads}{Number of threads}
+  \item{kind}{Kind of schedule: \code{"static"}, \code{"dynamic"}
+    \code{"guided"} or \code{"auto"}. See OpenMP Manual.}
+  \item{chunk_size}{Size of the chunk of work. See OpenMP Manual.}
 }
 \details{
   \code{Romp_get_num_procs} return the number of processors. On Intel

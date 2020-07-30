@@ -1,9 +1,12 @@
 useDynLib(acdx)
-import(Matrix)
-export(quest)
-export(acplot,log_axt,logit_axt)
-export(aggr)
 
-export(cfactor,acdx)
+import(Matrix)
+importFrom("graphics", "abline", "axis", "lines", "mtext")
+importFrom("stats", "quantile", "sd")
+
+export(aggr)
+export(acplot)
+export(acdx)
+export(quest)
 
 exportPattern("Romp_")

@@ -6,8 +6,8 @@
   acdx(Y,Zf,X1,G1,Xf=NULL,Xc=NULL,w=NULL,
     iter_tol=1e-5,bt_tol=-0.1,inv_tol=1e-12,
     iter_max=30,bt_max=20,wssize_min=4096/8,
-    y_eps=NULL, init=TRUE, keepY=FALSe,keepE=FALSE,
-    bootid=NULL,nboot=99,bootpar="beta" )
+    y_eps=NULL, verbose=1,init=TRUE, keepY=FALSE,keepE=FALSE,
+    bootid=NULL,nboot=99,bootpar="beta")
   }
 \arguments{
   \item{Y}{Aggregated cells array}
@@ -53,5 +53,7 @@
   \code{\link{aggr}}
 }
 \examples{
-  acdx()
+  data(KUL3)
+  acdx(KUL3$y,X1=KUL3$annot$ctype_tissue,Zf=KUL3$annot$sample,
+    G1=KUL3$annot$ctype_tissue,bootid=KUL3$annot$patient,nboot=9,verbose=1)
 }
