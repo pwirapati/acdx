@@ -64,3 +64,11 @@ KUL3_ctype_sample <- aggr( rumi, paste(annot$Cell_type,annot$Sample,sep="|") )
 ```
 
 Let's examine the objects.
+
+## Miscellanea
+
+Aggregate variance:
+
+$$
+v_{ij} = \left[ \frac{1}{12} + s_{ij}^2 \right]/n_i
+$$
