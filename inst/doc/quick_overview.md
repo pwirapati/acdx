@@ -85,10 +85,8 @@ Let's examine the objects.
 
 ## Miscellanea
 
-Aggregate variance:
+Aggregated cells variance of the mean
 
-<div>
-\[
+$$
 v_{ij} = \left[ \frac{1}{12} + s_{ij}^2 \right]/n_i
-\]
-</div>
+$$
