@@ -17,7 +17,7 @@ acplot <- function( ac , gene, o=NULL, xf=function(x)log(x+.5),
   if(!is.null(col.key) && !is.null(col.map) )
     col <- col.map[ ac$annot[o,col.key] ]
   else
-    col <- 1
+    col <- rep(1,nac)
   
   if(is.null(cex))
     cex <- 1 + sqrt(ac$annot$N/max(ac$annot$N))*2
