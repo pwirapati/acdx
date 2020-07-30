@@ -39,3 +39,28 @@ the form of compressed tab-delimited (non-sparse) tables.
 2. [Raw counts](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE144735&format=file&file=GSE144735%5Fprocessed%5FKUL3%5FCRC%5F10X%5Fraw%5FUMI%5Fcount%5Fmatrix%2Etxt%2Egz)(54 Mb)
 
 The annotation can be read in as data frame directly. The raw counts, if read in as data.frame, need to be converted into a matrix or sparse matrix.
+
+## Aggregation
+
+Load the package
+
+```
+library(acdx)
+```
+
+Assume that `annot` and `rumi` are cell-level annotation and raw UMI data.
+
+Decide on the aggregation keys (cell groups).
+
+This example aggregate into cell types, regardless of the samples
+```
+KUL3_ctype <- aggr( rumi, annot$Cell_type )
+```
+
+This example aggregate into a combination (Cartesian product) of cell types and sample id
+
+```
+KUL3_ctype_sample <- aggr( rumi, paste(annot$Cell_type,annot$Sample,sep="|") )
+```
+
+Let's examine the objects.
