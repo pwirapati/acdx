@@ -8,7 +8,7 @@ acplot <- function( ac , gene, o=NULL, xf=function(x)log(x+.5),
   col.key = NULL, col.map = NULL,
   pch=20, cex=NULL,bar=FALSE,
   xt.key=NULL,
-  xtv=0,xtl=FALSE,
+  xtv=0,xtl=0,
   xt.key2=NULL,
   xtv2=0,xtl2=2,
   ...

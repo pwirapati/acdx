@@ -1,8 +1,9 @@
 useDynLib(acdx)
 
 import(Matrix)
-importFrom("graphics", "abline", "axis", "lines", "mtext")
-importFrom("stats", "quantile", "sd")
+importFrom("graphics", "abline", "axis", "lines", "mtext","par")
+importFrom("methods","is")
+importFrom("stats", "quantile", "sd","na.omit")
 
 export(aggr)
 export(acplot)

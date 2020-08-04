@@ -1,6 +1,6 @@
 aggr <- function( x, cellgroups, v0 = 1/12 )
 {
-  require(Matrix)
+  #require(Matrix)
 
   cellgroups <- as.character(cellgroups)
   uid <- na.omit(unique(cellgroups))
