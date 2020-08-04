@@ -1,6 +1,6 @@
 \name{acdx}
 \alias{acdx}
-\title{Aggregated Cells Differential Expression}
+\title{Aggregated Cell Differential Expression}
 \description{Gene-by-gene meta-regression analysis of aggregated single-cell profiles}
 \usage{
   acdx(Y,Zf,X1,G1,Xf=NULL,Xc=NULL,w=NULL,
