@@ -4,6 +4,7 @@ import(Matrix)
 importFrom("graphics", "abline", "axis", "lines", "mtext","par")
 importFrom("methods","is")
 importFrom("stats", "quantile", "sd","na.omit")
+importFrom("abind","abind")
 
 export(aggr)
 export(acplot)

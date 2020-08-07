@@ -3,10 +3,10 @@ Type: Package
 Title: Aggregated Cell Differential Expression
 Version: 0.0.2
 Date: 2000-12-31
-Depends: R (>= 3.5), Matrix, methods
+Depends: R (>= 3.5), Matrix, methods, abind
 Author: Pratyaksha Wirapati
 Maintainer: Pratyaksha Wirapati <pratyaksha.wirapati@sib.swiss>
 Description: This package performs aggregation, differential expression and visualization of single-cell expression profiles.
 License: GPL
-Packaged: 2020-07-27 21:37:53 UTC; pwirapat
+Packaged: 2020-08-04 19:16:47 UTC; pwirapat
 NeedsCompilation: yes
