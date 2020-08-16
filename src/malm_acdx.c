@@ -165,7 +165,7 @@ malm_acdx (
    */
   if( default_init && n_X1 > 0 )
     {
-    const double min_phi = 0.01;
+    const double min_phi = 0.01; // adhoc initial non-zero value
     
     // library scale factor: init to all zeroes
     dset( k_Zf, alpha, 0 );

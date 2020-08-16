@@ -1,6 +1,6 @@
 aggr <- function( x, cellgroups, v0 = 1/12,
-  sep="\t", chunk=NULL,
-  verbose=0 )
+  sep="\t",
+  verbose=1 )
 {
   cellgroups <- as.character(cellgroups)
   ncells <- length(cellgroups)
@@ -49,6 +49,7 @@ aggr <- function( x, cellgroups, v0 = 1/12,
     if( nh != ncells + 1 )
       stop("number of columns in header does not match cellgroups")
 
+    chunk <- 1200
     n_gene <- 0
     y <- array(0,dim=c(2,n_ac, chunk),
                 dimnames=list(c("u","v"),uid,1:chunk))
@@ -56,7 +57,7 @@ aggr <- function( x, cellgroups, v0 = 1/12,
     j <- sapply( uid, function(i) grep(i,cellgroups,fixed=T))
     N <- sapply(j,length)
     a$N <- N
-    if(is.null(chunk)) chunk <- floor(3e7/ncells)
+
     repeat
       {
       gene <- scan(f,"",1,quiet=TRUE)
@@ -74,15 +75,20 @@ aggr <- function( x, cellgroups, v0 = 1/12,
         y[2,i,n_gene] <- SE2
         }
       if( verbose && ( n_gene %% 50 == 0) )
-        message(sprintf("\rprocessed: %6d genes",n_gene),appendLF=FALSE)
+        message(sprintf("\rprocessed: %6d genes (alloc. chunk %7d)",n_gene,chunk),appendLF=FALSE)
 
-      if( n_gene %% chunk == 0 )
-        y <- abind( y, array(0,dim=c(2,n_ac,n_gene+chunk)),along=3)
+      if( n_gene == chunk )
+        {
+        chunk <- 2*chunk
+        y <- abind( y, array(0,dim=c(2,n_ac,chunk)),along=3)
+        gc()
+        }
       }
     if(verbose)
       message(sprintf("\rprocessed: %6d genes",n_gene),appendLF=TRUE)
     close(f)
     y <- y[,,1:n_gene]
+    gc()
     }
   list(annot=a,y=y)
 }

@@ -3,7 +3,7 @@
 \title{Aggregate Single-Cell Expression Profiles}
 \description{Produce aggregate matrix from raw counts}
 \usage{
-  aggr( x, cellgroups, v0 = 1/12, sep="\t", chunk=NULL, verbose=1 )
+  aggr( x, cellgroups, v0 = 1/12, sep="\t", verbose=1 )
 }
 \arguments{
   \item{x}{Raw counts in sparse dgCMatrix format, with genes as rows
@@ -15,7 +15,6 @@
   \item{v0}{Baseline variance, with the default 1/12 equals to that of
     the uniform distribution in an interval of width one}
   \item{sep}{Separator character; only if \code{x} is a file of text table}
-  \item{chunk}{Allocation chunk for reading text table}
   \item{verbose}{Output progress messages when performing the aggregation}
 }
 \details{
