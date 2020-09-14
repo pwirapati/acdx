@@ -3,57 +3,65 @@
 \title{Aggregated Cell Differential Expression}
 \description{Gene-by-gene meta-regression analysis of aggregated single-cell profiles}
 \usage{
-  acdx(Y,Zf,X1,G1,Xf=NULL,Xc=NULL,w=NULL,
-    iter_tol=1e-5,bt_tol=-0.1,inv_tol=1e-12,
-    iter_max=30,bt_max=20,wssize_min=4096/8,
-    y_eps=NULL, verbose=1,init=TRUE, keepY=FALSE,keepE=FALSE,
-    bootid=NULL,nboot=99,bootpar="beta")
+  acdx( ac, X, Gi=NULL, n_boot=1,
+    id_boot=NULL, seed_boot=0,
+    y0=NULL, verbose=0 )
   }
 \arguments{
-  \item{Y}{Aggregated cells array}
-  \item{Zf}{Scaling-factor groups}
-  \item{X1}{Intercept groups}
-  \item{G1}{Dispersion groups}
-  \item{Xf}{Explanatory factors}
-  \item{Xc}{Continuous-valued explanatory variables}
-  \item{w}{Weights per aggregate}
-  \item{iter_tol}{Convergence tolerance for the overall iterations}
-  \item{bt_tol}{Backtracking tolerance}
-  \item{inv_tol}{Inversion tolerance}
-  \item{iter_max}{Maximum number of overall iterations}
-  \item{bt_max}{Maximum number of backtracking iterations}
-  \item{wssize_min}{Minimum per-thread temporary workspace size}
-  \item{y_eps}{Data shift, default to half of the smallest non-zero value}
-  \item{verbose}{Verbosity: quiet (0), one line per fit (1) one line per
-    iterations}
-  \item{init}{Use default initializer}
-  \item{keepY}{Return a copy of \code{Y} in the output object}
-  \item{keepE}{Return a copy of the expected mean and variance
-   per data point, in the same format as \code{Y}}
-  \item{bootid}{labels for bootstrap resampling units}
-  \item{nboot}{number of bootstrap resampling}
-  \item{bootpar}{parameters whose bootstrap values are to be kept; any
-    subset of \code{c("alpha","beta","phi")}}
-  }
+  \item{ac}{Aggregated cell object (output of \code{\link{greg}})}
+  \item{X}{Design matrix}
+  \item{Gi}{Group indicators of dispersion parameters. Default: one
+  parameter for all samples.}
+  \item{n_boot}{Number of bootstrap resamples}
+  \item{id_boot}{Identifier of bootstrap blocks}
+  \item{seed_boot}{Random number seed for bootstrapping}
+  \item{y0}{Small constant added to the data (default: half of smallest
+  nonzero value in the entire dataset)}
+  \item{verbose}{Print \code{#} for each
+    bootstrap replicate when `verbose=1`. The default is silent.}
+}
 \details{
-  Fit a regression model to aggregated cells data. This a gamma meta-GLM
-  model where the error is the sum of given aggregate summary variance
-  and the multiplicative gamma error between aggregates. Logarithmic
-  link is used to related the mean parameters.
+Fit a gamma-GLM-like regression with variance components
+that include per data point standard errors from cell-level
+aggregation.
+The model
+is analogous to random-effect meta-regression models used
+in meta-analysis, but with the variance as quadratic
+function of the mean.
+The dispersion parameters can be interpreted
+as the square of coefficient of variations, modelling relative
+(multiplicative) error due to between aggregate heterogeneity,
+after subtractin the cell-level variability. 
+
+There are two models fitted step-wise. The first one fits
+simultaneous row (sample)
+and column (gene) intercepts, without considering the design matrix.
+The sample intercepts (which correspond to normalization or size 
+factors) are then used as offset in the second model. The
+gene intercepts and dispersions are not used for the second model,
+but are still kept.
+
+The second model is fitted separately for all combination
+of gene, cell type and bootstrap replicates.
+
+Missing aggregates due to zero or one counts are skipped.
+The parameters can be \code{NA} due to missing aggregates
+or collinearity (which favor the term that appear first in
+the design matrix).
 }
 \value{
-  \item{alpha}{Coefficients for scaling factors, in log scale}
-  \item{beta}{Gene-wise effects corresponding to the matrices \code{X1},
-    \code{Xf} and \code{Xc}}
-  \item{phi}{Gene-wise dispersion parameters}
-  \item{status}{A vector of iteration status, number of iterations
-    and number of backtracking}
-}
-\seealso{
-  \code{\link{aggr}}
+\item{gamma}{Gene-specific intercepts from first-step model, in natural
+  logarithmic scale.}
+\item{alpha}{Sample-specific intercepts from first-step model, in natural
+  logarithmic scale.}
+\item{psi}{Gene-specific gamma dispersion parameter from the first
+  model. Not in logarithmic scale.}
+\item{beta}{Coefficients from the second-step model, corresponding
+  to columns of \code{X}. In natural
+  logarithmic scale.}
+\item{phi}{Gene- and group-specific gamma dispersion parameter from the second
+  model. Not in logarithmic scale.}
 }
 \examples{
-  data(KUL3)
-  acdx(KUL3$y,X1=KUL3$annot$ctype_tissue,Zf=KUL3$annot$sample,
-    G1=KUL3$annot$ctype_tissue,bootid=KUL3$annot$patient,nboot=9,verbose=1)
+  ## See `quick tutorial`
 }

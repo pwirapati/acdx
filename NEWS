@@ -1,3 +1,12 @@
+acdx v1.0.0 (2020-09-14)
+========================
+
+Changes:
+
+* Major revision of most things, should be considered entirely
+  different package. Results or codes with older version will
+  not work at all.
+
 acdx v0.0.2-alpha (2020-08-04)
 =================
 

@@ -1,37 +1,91 @@
-quest <- function(fit, ifun, siglevel=0.05, sort.by=NULL)
+questf <- function(fit, ifun)
 {
-  if( is.null(fit$nboot) || fit$nboot < 2 ) stop("no bootstrap data")
+  n_boot <- ncol(fit$B)
 
   cat("calculating interest functional...")
-  theta_boot <- sapply( 1:fit$nboot,function(b)
-                   ifun(beta=fit$Beta[,,b],phi=fit$Phi[,,b],alpha=fit$Alpha[,b]))
+  theta_boot <- sapply( 1:n_boot,function(b)
+                   ifun(beta=fit$beta[,,,b],phi=fit$phi[,,,b]))
   cat("DONE.\n")
 
-  theta <-  ifun(beta=fit$beta,phi=fit$phi,alpha=fit$alpha)
-  se <- apply(theta_boot,1,sd)
-  
-  cat("calculating bootstrap distribution...")
-  maxT <- apply( scale(t(theta_boot),center=T,scale=T), 1, sort, decr=T )
-  tnull=apply(maxT,1,quantile,siglevel)
-  cat("DONE.\n")
-
-  top=data.frame(theta=theta,se=se,t=theta/se,fc=exp(theta),
-    row.names=names(theta))
-  top <- top[order(top$t,decreasing=T),]
-  top$FWER <- sapply(top$t,function(tt) (1+sum(tt < maxT[1,]))/(1+fit$nboot))
-  top$FDP <- sapply( 1:nrow(top),function(r) (sum(tnull > top$t[r])+1)/(r+1) )
-  for(r in (nrow(top)-1):1) top$FDP[r] <- min(top$FDP[r],top$FDP[r+1])
-  top$FDP <- round(top$FDP,5)
-
-  if(!is.null(sort.by) && sort.by=="fc")
-    top <- top[order(top$fc,decreasing=T),]
-
-  list(
-    ifun=ifun,
-    top=top,
-    tnull=tnull,
-    maxT.1=maxT[1,]
-  )
-
+  bremt(theta_boot)
 }
 
+questmm <- function(
+  param,
+  showcomb = F,
+  default="L",
+  H=NULL,
+  N=NULL,
+  L=NULL,
+  sep=","
+  )
+{
+  coef_names <- dimnames(param)[[1]]
+  n_coef <- length(coef_names)
+  ctype_names <- dimnames(param)[[3]]
+  n_ctype <- length(ctype_names)
+  ptab <- expand.grid(coef=coef_names,ctype=ctype_names)
+  rownames(ptab) <- paste(ptab[,1],ptab[,2],sep=sep)
+
+  if(showcomb) { return(cbind(rownames(ptab))) }
+
+  if(!grepl("^[HNL]$",default))
+    stop("default= should be either H, N or L")
+  ptab[["set"]] <- default
+  if(!is.null(H))
+    {
+    if(default=="H") stop("H is the default")
+    for(pat in H)
+      {
+      i <- grep(pat,rownames(ptab))
+      if(length(i)==0) warning("H: ",pat," not matched");
+      ptab[i,"set"] <- "H"
+      }
+    }
+  if(!is.null(N))
+    {
+    if(default=="N") stop("N is the default")
+    for(pat in N)
+      {
+      i <- grep(pat,rownames(ptab))
+      if(length(i)==0) warning("N: ",pat," not matched");
+      ptab[i,"set"] <- "N"
+      }
+    }
+  if(!is.null(L))
+    {
+    if(default=="L") stop("L is the default")
+    for(pat in L)
+      {
+      i <- grep(pat,rownames(ptab))
+      if(length(i)==0) warning("L: ",pat," not matched");
+      ptab[i,"set"] <- "L"
+      }
+    }
+
+  idH <- grep("H",ptab$set)
+  idHcoef <- match( ptab[idH,1], coef_names)
+  idHctype <- match( ptab[idH,2], ctype_names)
+  idL <- grep("L",ptab$set)
+  idLcoef <- match( ptab[idL,1], coef_names)
+  idLctype <- match( ptab[idL,2], ctype_names)
+
+  r <- .C("mmdiff",
+    dims=as.integer(dim(param)),
+    param=as.double(param),
+    nH=as.integer(length(idH)),
+    Hctype=as.integer(idHctype-1),
+    Hcoef=as.integer(idHcoef-1),
+    nL=as.integer(length(idL)),
+    Lctype=as.integer(idLctype-1),
+    Lcoef=as.integer(idLcoef-1),
+    theta=double(dim(param)[2]*dim(param)[4]),
+    na_rm=as.integer(1),
+    NAOK=TRUE,
+    PACKAGE="acdx"
+  )
+  r$param <- NULL
+  dim(r$theta) <- c(dim(param)[2],dim(param)[4])
+  rownames(r$theta) <- dimnames(param)[[2]]
+  bremt(r$theta)
+}
