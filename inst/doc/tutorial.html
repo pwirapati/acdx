@@ -190,7 +190,7 @@ header > p { font-family: "Tahoma", sans-serif; color:rgb(0,0,96);}
 <p>They need to be reduced to a table with sample-level information (with the same sample order as used in the aggregate).</p>
 <p>We can add them to the <code>KUL3</code> aggregate object.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>KUL3<span class="op">$</span>a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row.names=</span><span class="kw">rownames</span>(KUL3<span class="op">$</span>N))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>KUL3<span class="op">$</span>a &lt;-<span class="st"> </span>a[<span class="kw">match</span>(<span class="kw">rownames</span>(KUL3<span class="op">$</span>a),a<span class="op">$</span>Sample),<span class="st">&quot;Class&quot;</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>KUL3<span class="op">$</span>a<span class="op">$</span>Class &lt;-<span class="st"> </span>a[<span class="kw">match</span>(<span class="kw">rownames</span>(KUL3<span class="op">$</span>a),a<span class="op">$</span>Sample),<span class="st">&quot;Class&quot;</span>]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>KUL3<span class="op">$</span>a</span></code></pre></div>
 <p>Suppose we don’t want to distinguish <code>Border</code> and <code>Tumor</code>. We can derive another variable.</p>

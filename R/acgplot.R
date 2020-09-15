@@ -13,7 +13,7 @@ acgplot <- function( ac, gene,
   fit=NULL,
   adjusted=FALSE,
   s=.5,
-  col.dot=1,
+  col.dot=NULL,
   ...     # options to 'plot.default'
 )
 {
@@ -38,6 +38,8 @@ acgplot <- function( ac, gene,
     }
   else
     n_tags <- 0
+
+  if(is.null(col.dot)) col.dot <- rep(1,length(y))
 
   plot( log(y+s), axes=FALSE,frame=TRUE, xlab="",
         ylab=paste(ifelse(adjusted,"adjusted","raw"),"counts"),main=g,
