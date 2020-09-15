@@ -79,8 +79,10 @@ malm_acdx (
   const int n_thread = omp_get_max_threads();
   uv *E = (uv*)malloc( sizeof(uv) * n_sample * n_gene * n_thread );
 
+  int n_done = 0, chunk=ceil(n_boot/100.0);
+
   #pragma omp parallel for schedule(runtime)
-  for(int b = 0; b < n_boot; b++ )
+ for(int b = 0; b < n_boot; b++ )
     {
     int t_id = omp_get_thread_num();
     const double *w_b = w + b * n_sample * n_ctype;
@@ -109,7 +111,14 @@ malm_acdx (
       malm(dim, Yk, w_bk, Xt, Gi, E_t,
         alpha_bk, beta_bk, phi_bk, NULL, iopt_, dopt_, NULL);
       } // ctype
-    if(iopt_[0]==1) fputc('#',stderr);
+
+    #pragma omp critical
+      {
+      n_done++;
+      if(iopt_[0]==1 && (n_done % chunk == 0))
+        fprintf(stderr,"\rbootstrap completed: %d (%.1f%%)",
+          n_done, (double)(n_done)*100/n_boot);
+      }
     } // bootstrap
 
   if(iopt_[0]==1) fputc('\n',stderr);
