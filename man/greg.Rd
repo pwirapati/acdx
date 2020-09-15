@@ -1,23 +1,30 @@
 \name{greg}
 \alias{greg}
-\title{Aggregate Single-Cell Expression Profiles}
-\description{Produce aggregate array from raw counts}
+\title{Aggregate single-cell expression profiles}
+\description{Produce aggregate expression profiles from raw counts}
 \usage{
-  greg( x, cell_sample, cell_type, v0 = 1/12, sep="\t", verbose=1 )
+  greg( x, cell_sample, cell_type, cell_names=NULL,
+    v0 = 1/12, sep="\t", verbose=1 )
 }
 \arguments{
   \item{x}{Raw counts in sparse dgCMatrix format, with genes as rows
   and cells as columns. Alternatively, if it is a single string, it
   is interpreted as local file name containing text table (which
   can be compressed).}
-  \item{cell_sample}{Sample labels of the cells,
-    a vector with the same length as the number of columns of \code{x}}
-  \item{cell_type}{Cell type labels of the cells,
-    a vector with the same length as the number of columns of \code{x}}
+  \item{cell_sample}{Sample identifiers of the cells.}
+  \item{cell_type}{Cell type labels of the cells.}
+  \item{cell_names}{Cell identifiers to be matched by the names in \code{x}
+    (should have exactly the same length as \code{cell_sample}).
+    If \code{NULL}, then the data and annotations are assumed to
+    have the same length and in the same order. If the names
+    is missing in \code{x} but \code{cell_names} is supplied,
+    then it is considered an error. The both names are
+    present, only the intersection are used, silently dropping
+    the mismatches, and the ordering is not important.}
   \item{v0}{Baseline variance, with the default 1/12 equals to that of
     the uniform distribution in an interval of width one.}
-  \item{sep}{Separator character; relevant only when \code{x} is
-    a file of text table}
+  \item{sep}{Column separator character; relevant only when \code{x} is
+    a file of text table.}
   \item{verbose}{Output progress messages when performing the aggregation}
 }
 \details{

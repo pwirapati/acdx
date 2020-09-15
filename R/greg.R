@@ -1,9 +1,17 @@
 greg <- function( 
-  x, cell_sample, cell_type, v0 = 1/12, sep="\t", verbose = 1 )
+  x,                # matrix object (dgCMatrix or dense), or a file name
+  cell_sample,
+  cell_type, 
+  cell_names = NULL, # cell names, to be matched with names in x
+  v0 = 1/12, 
+  sep="\t", verbose = 1 )
 {
   if(length(cell_sample) != length(cell_type))
     stop("length(cell_sample) != length(cell_type)")
   n_cells <- length(cell_sample)
+
+  if(!is.null(cell_names) && length(cell_names) != n_cells )
+    stop("length(cell_names) != length(cell_sample)")
 
   u_sample <- unique(as.character(cell_sample))
   u_ctype <- unique(as.character(cell_type))
@@ -16,11 +24,27 @@ greg <- function(
   
   if( is.matrix(x) || is(x,"sparseMatrix" ))
     {
+    # cell_names && no colnames: error
+    # cell_names && colnames: intersect
+    # no cell_nmaes && no colnames: assume integer, length must match
+    # no cell_names && colnames: ditto
+
+    if( is.null(cell_names))
+      {
+      if( ncol(x) != n_cells )
+        stop("number of cells annotated doesn't match number of cells in x")
+      la2lx <- 1:n_cells
+      }
+    else 
+      {
+      la2lx <- pmatch(cell_names, colnames(x))
+      n_nomatch <- sum(is.na(la2lx))
+      if(n_nomatch != 0)
+        warning(n_nomatch," cells are not matched.")
+      }
+
     n_gene <- nrow(x)
-    n_cells <- ncol(x)
-    if( n_cells != length(cell_sample))
-      stop("length of cell labels doesn't match the number of cells in data")
-    
+
     y <- array( c(0,Inf), dim=c(2,n_sample,n_gene,n_ctype),
                 dimnames=list(c("u","v"),u_sample,rownames(x),u_ctype))
 
@@ -34,6 +58,8 @@ greg <- function(
           grep(i, cell_sample, fixed=T),
           grep(k, cell_type, fixed=T))
         N[i,k] <- Nik <- length(l)
+
+        l <- na.omit(la2lx[l])
         
         if( Nik == 1 )
           {
@@ -49,16 +75,28 @@ greg <- function(
         } # k
       } # i
     }
-  else if( is.character(x) && length(x)==1 ) # interpret as filename
+  else if( is.character(x) && length(x)==1 ) # interpret x as a filename
     {
     f <- gzfile(x,open="rt")
 
     h <- strsplit( readLines(f,1), sep, fixed=TRUE )[[1]]
-    nh <- length(h)
+    n_headers <- length(h)
     if(verbose)
-      message(sprintf("nh = %d n_cells = %d",nh,n_cells))
-    if( nh != n_cells + 1 )
-      stop("number of columns in header does not match cellgroups")
+      message(sprintf("n_headers = %d, n_cells = %d",n_headers,n_cells))
+
+    if( is.null(cell_names))
+      {
+      if( n_headers != n_cells + 1 )
+        stop("number of cells annotated doesn't match number of cells in x")
+      la2lx <- 1:n_cells
+      }
+    else
+      {
+      la2lx <- pmatch( cell_names, h[-1])
+      n_nomatch <- sum(is.na(la2lx))
+      if(n_nomatch != 0)
+        warning(n_nomatch," cells are not matched.")
+      }
 
     chunk <- 1200
     n_gene <- 0
@@ -68,8 +106,8 @@ greg <- function(
 
     cidx <- sapply( u_ctype,function(k)
              sapply( u_sample,function(i)
-               intersect(grep(k,cell_type,fixed=T),
-                 grep(i,cell_sample,fixed=T))))
+               na.omit(la2lx[intersect(grep(k,cell_type,fixed=T),
+                 grep(i,cell_sample,fixed=T))]),simplify=FALSE))
 
     N <- sapply( u_ctype, function(k)
             sapply( u_sample, function(i) length(cidx[i,k][[1]])))
