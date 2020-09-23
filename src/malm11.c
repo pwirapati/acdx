@@ -15,16 +15,17 @@ malm11(
   const double *w,
   uv *E,
   double *alpha,
-  double *gamma,
-  double *psi,
+  double *beta0,
+  double *phi0,
   double *L_,
   const int *iopt_,
   const double *dopt_
   )
 {
   const int n = dim[0], m = dim[1];
-  const int verbose = iopt_[0];
-  const int iter_max = iopt_[1];
+  const int family = iopt_[0];
+  const int verbose = iopt_[1];
+  const int iter_max = iopt_[2];
   const double epsilon = dopt_[0];
 
   // init
@@ -33,7 +34,7 @@ malm11(
   for(int i = 0; i < n; i++ )
     alpha[i] = (w[i]==0?NAN:1);
   for(int j = 0; j < m; j++ )
-    gamma[j] = psi[j] = 1;
+    beta0[j] = phi0[j] = 1;
 
   int nnz = 0;
   for(int i = 0; i < n; i++ )
@@ -62,9 +63,9 @@ malm11(
         Suj += W * Ej[i].u;
         }
       if( Suj > 0 )
-        gamma[j] *= Syj/Suj;
+        beta0[j] *= Syj/Suj;
       else
-        gamma[j] = 0;
+        beta0[j] = 0;
       }
     
     for(int i = 0; i < n; i++ )
@@ -77,12 +78,14 @@ malm11(
       for(int i = 0; i < n; i++ )
         {
         if(w[i]==0) continue;
-        double W = gamma[j] / Ej[i].v;  // w[i] cancels; omitted
+        double W = beta0[j] / Ej[i].v;  // w[i] cancels; omitted
         Sy[i] += W * yj[i].u;
         Su[i] += W * Ej[i].u;
         }
       }
 
+    // constrain sum log alpha = 0
+    //
     double Slog = 0; int Sw = 0;
     for(int i = 0; i < n; i++ )
       {
@@ -105,7 +108,7 @@ malm11(
       {
       uv *Ej = E + j*n;
       for(int i = 0; i < n; i++ )
-        Ej[i].u = alpha[i]*gamma[j];
+        Ej[i].u = alpha[i]*beta0[j];
       }
 
     // dispersion
@@ -126,15 +129,23 @@ malm11(
         Ss += W * Ej[i].v;
         }
       if(Ss > 0 )
-        psi[j] *= Sd/Ss;
+        phi0[j] *= Sd/Ss;
       else
-        psi[j] = 0;
+        phi0[j] = 0;
 
-      for(int i = 0; i < n; i++ )
-        {
-        if( w[i]==0 ) continue;
-        Ej[i].v = yj[i].v + psi[j] * Ej[i].u * Ej[i].u;
-        }
+      if( family == 1 ) // negative binomial
+        for(int i = 0; i < n; i++ )
+          {
+          if( w[i]==0 ) continue;
+          Ej[i].v = Ej[i].u + phi0[j] * Ej[i].u * Ej[i].u;
+          }
+      else // RE gamma
+        for(int i = 0; i < n; i++ )
+          {
+          if( w[i]==0 ) continue;
+          Ej[i].v = yj[i].v + phi0[j] * Ej[i].u * Ej[i].u;
+          }
+
       L += PLL( n, w, yj, Ej );
       }
 
@@ -143,10 +154,12 @@ malm11(
     if(change < epsilon ) break;
     Lold = L;
     } // iter 
+
   for(int i = 0; i < n; i++ )
     alpha[i] = log(alpha[i]);
+  
   for(int j = 0; j < m; j++ )
-    gamma[j] = log(gamma[j] );
+    beta0[j] = log(beta0[j] );
   
   if(L_) L_[0] = Lold;
   free(Sy);

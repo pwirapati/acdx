@@ -1,10 +1,11 @@
 useDynLib(acdx)
 
-import(Matrix)
-importFrom("graphics", "abline", "axis", "lines", "mtext","par")
+import(graphics)
+importFrom("grDevices","recordGraphics")
 importFrom("methods","is")
 importFrom("stats", "quantile", "sd","na.omit")
 importFrom("abind","abind")
+import(Matrix)
 
 export(greg)
 export(acgplot)

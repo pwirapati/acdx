@@ -1,3 +1,10 @@
+acdx v1.0.2pre1 (2020-09-23)
+===========================
+
+- questmm: use na.rm option to skip NA 
+- acdx: choice of normalization method and pseudo-bulk (negbin) method
+- acgplot: various new options
+
 acdx v1.0.1 (2020-09-15)
 ========================
 

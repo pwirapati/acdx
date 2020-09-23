@@ -17,7 +17,8 @@ questmm <- function(
   H=NULL,
   N=NULL,
   L=NULL,
-  sep=","
+  sep=",",
+  na.rm=FALSE
   )
 {
   coef_names <- dimnames(param)[[1]]
@@ -80,7 +81,7 @@ questmm <- function(
     Lctype=as.integer(idLctype-1),
     Lcoef=as.integer(idLcoef-1),
     theta=double(dim(param)[2]*dim(param)[4]),
-    na_rm=as.integer(1),
+    na_rm=as.integer(na.rm),
     NAOK=TRUE,
     PACKAGE="acdx"
   )

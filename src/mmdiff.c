@@ -31,12 +31,16 @@ mmdiff(
       for(int h = 0; h < nH[0]; h++ )
         {
         const double beta_h = beta_bj[ Hctype[h] * n_coef * n_gene + Hcoef[h]]; 
+        if( !na_rm && isnan(beta_h))
+          { minH = NAN; break; }
         if(beta_h < minH ) minH = beta_h;
         }
       double maxL = -INFINITY;
       for(int l = 0; l < nL[0]; l++ )
         {
         const double beta_l = beta_bj[ Lctype[l] * n_coef * n_gene + Lcoef[l]];
+        if( !na_rm && isnan(beta_l))
+          { maxL = NAN; break; }
         if(beta_l > maxL ) maxL = beta_l;
         }
       theta_b[j] = minH - maxL;

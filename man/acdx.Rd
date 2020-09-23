@@ -5,6 +5,8 @@
 \usage{
   acdx( ac, X, Gi=NULL, n_boot=1,
     id_boot=NULL, seed_boot=0,
+    pbulk=FALSE, mean2sum = TRUE,
+    norm_method=1,
     y0=NULL, verbose=0 )
   }
 \arguments{
@@ -15,6 +17,9 @@
   \item{n_boot}{Number of bootstrap resamples}
   \item{id_boot}{Identifier of bootstrap blocks}
   \item{seed_boot}{Random number seed for bootstrapping}
+  \item{pbulk}{Use pseudo-bulk approach (negative binomial model)}
+  \item{mean2sum}{\code{y} is converted from means to sums, if \code{pbulk=TRUE}.}
+  \item{norm_method}{normalization method: 0 = none, 1 = per cell-type, 2 = global}
   \item{y0}{Small constant added to the data (default: half of smallest
   nonzero value in the entire dataset)}
   \item{verbose}{Print \code{#} for each

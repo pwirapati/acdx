@@ -11,7 +11,8 @@
     H=NULL,
     N=NULL,
     L=NULL,
-    sep=","
+    sep=",",
+    na.rm=FALSE
     )
 }
 \arguments{
@@ -28,6 +29,8 @@
  \item{L}{A set of regular expression patterns for the "low" group}
  \item{sep}{String separator for coeffcient-celltype combinations.
    Can be changed if comma is already used as part of the names.}
+ \item{na.rm}{Skip coefficients if they are \code{NA}. The default
+   is to make the interest score \code{NA} for any missing coefficient.}
 }
 \details{
   \code{questmm} calculates, for each gene and each bootstrap

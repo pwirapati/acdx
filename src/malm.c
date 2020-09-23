@@ -92,7 +92,8 @@ update_phi(
   double *phi,
   const uv *y,
   uv *E,
-  double d_adj
+  double d_adj,
+  const int family
   )
 {
   double Sd[q], Ss2[q];
@@ -112,11 +113,18 @@ update_phi(
   for(int a = 0; a < q; a++ )
     if( Ss2[a] > 0 ) phi[a] *= Sd[a]/Ss2[a];
 
-  for(int i = 0; i < n; i++ )
-    {
-    if(w[i]==0) continue;
-    E[i].v = y[i].v + phi[Gi[i]] * E[i].u * E[i].u;
-    }
+  if( family == 1 )
+    for(int i = 0; i < n; i++ )
+      {
+      if(w[i]==0) continue;
+      E[i].v = E[i].u + phi[Gi[i]] * E[i].u * E[i].u;
+      }
+  else
+    for(int i = 0; i < n; i++ )
+      {
+      if(w[i]==0) continue;
+      E[i].v = y[i].v + phi[Gi[i]] * E[i].u * E[i].u;
+      }
 
 }
 
@@ -139,9 +147,10 @@ malm (
 {
   const int n = dims_[0], m = dims_[1], p = dims_[2], q = dims_[3];
 
-  const int verbose = iopt_[0];
-  const int iter_max = iopt_[1];
-  const int bt_iter_max = iopt_[2];
+  const int family = iopt_[0];
+  const int verbose = iopt_[1];
+  const int iter_max = iopt_[2];
+  const int bt_iter_max = iopt_[3];
 
   const double epsilon = dopt_[0];
   const double bt_tol = dopt_[1];
@@ -197,12 +206,15 @@ malm (
         for(int a = 0; a < p; a++ )
           eta_i += Xti[a]*(beta[a] + S[a]);
         E[i].u = exp(eta_i);
-        E[i].v = y[i].v + phi[Gi[i]] * E[i].u * E[i].u;
+        if( family == 1 )
+          E[i].v = E[i].u + phi[Gi[i]] * E[i].u * E[i].u;
+        else
+          E[i].v = y[i].v + phi[Gi[i]] * E[i].u * E[i].u;
         }
       
       double phi_t[q];
       dcp( q, phi, phi_t);
-      update_phi(n,q,w,Gi,phi_t,y,E,d_adj);
+      update_phi(n,q,w,Gi,phi_t,y,E,d_adj,family);
 
       Ltry = PLL(n,w,y,E);
 

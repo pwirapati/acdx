@@ -1,12 +1,12 @@
 Package: acdx
 Type: Package
 Title: Aggregated Cell Differential Expression
-Version: 1.0.0
-Date: 2020-09-14
+Version: 1.0.2
+Date: 2020-09-23
 Depends: R (>= 3.5), Matrix, methods, abind
 Author: Pratyaksha Wirapati
 Maintainer: Pratyaksha Wirapati <pratyaksha.wirapati@sib.swiss>
 Description: This package performs aggregation, differential expression and visualization of single-cell expression profiles.
 License: GPL
-Packaged: 2020-09-14 13:14:43 UTC; pwirapat
+Packaged: 2020-09-23
 NeedsCompilation: yes
