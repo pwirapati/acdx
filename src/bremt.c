@@ -11,27 +11,24 @@ void
 bremt(
   const int *dims_,
   double *theta,     // M test vs B bootstrap instances
-  const double *alpha_,
+  const double *T0_,
   double *SE,        // resmapling SE of theta
   double *PCER,
   double *FWER,
-  double *FDP
+  double *FDR
   )
 {
   const int M = dims_[0], B = dims_[1];
-  double alpha = alpha_[0];
-  if(alpha > 1 ) alpha = 1;
-  if(alpha < 0 ) alpha = 0;
+  double T0 = *T0_;
 
-  int *nf = (int*) malloc( sizeof(int) * M * 2 );
+  int *nf = (int*) malloc( sizeof(int) * M * 3 );
   int *o = nf + M;
-  double *maxT0 = (double*) malloc(sizeof(double) * B );
+  int *ob = o + M;
 
   for(int i = 0; i < M; i++ )
     {
     SE[i] = 0;
     nf[i] = 0;
-    o[i] = i;
     PCER[i] = 1;
     }
 
@@ -59,7 +56,8 @@ bremt(
     PCER[i] /= nf[i]+1;
     }
 
-  // turn theta to T by scaling; -+/Inf/NA to -Inf to put last in sorting
+  // turn theta to T by scaling;
+  // convert-+/Inf/NA to -Inf to put last in sorting
   for(int b = 0; b < B; b++ )
     {
     double *theta_b = theta + b*M;
@@ -72,77 +70,84 @@ bremt(
       }
     }
 
-
   /*
-   *  FWER
+   *  step-down FWER and FDR
+   *
+   * Implement step-down maxT and ST-procedure
+   * in Ge, Dudoit, Speed (2003) Test 12:1-77
+   * algorithm in box 2 and 5, respectively.
+   *
    */
 
-  // sort to obtain maxT distribution (on the first row)
-  for(int b = 1; b < B; b++ )
-    {
-    double *theta_b = theta + b*M;
-    QSORT( int, M, double, theta_b, _u > _v );
-    }
-
-  // copy and sort the maximum
-  int Bf = 0;
-  for(int b = 1; b < B; b++ )
-    {
-    double T = theta[b*M];
-    if(isfinite(T)) Bf++;
-    maxT0[b] = T;
-    }
-  QSORT(int, Bf, double, maxT0, _u > _v );
-
+  double *T = theta;
+  
   for(int i = 0; i < M; i++ )
     {
     FWER[i] = 1;
-    for(int b = 0; b < Bf; b++ )
-      if( theta[i] < maxT0[b] ) 
-        FWER[i]++;
-    FWER[i] /= Bf+1;
-    }  
+    FDR[i] = 0;
+    }
 
+  for(int r = 0; r < M; r++ )
+    o[r] = r;
+  QSORT(int, M, int, o, T[_u] > T[_v]);
 
-  /*
-   *  FDP
-   */
-  // obtain empircal quantile of T at p = 1-1/M,1-2/M,1-3/M, ...
+  double W0 = M, W0ave = 0;
+  for(int r = M-1; r >= 0; r-- )
+    if( T[o[r]] > T0 ) 
+      { W0 -= r; break; }
+
+  for(int b = 1; b < B; b++ )
+    {
+    double *Tb = T + b*M;
+    for(int r = 0; r < M; r++ )
+      ob[r] = r;
+    QSORT( int, M, int, ob, Tb[_u] > Tb[_v] );
   
-  // put the values on the second column
-  double *Tnull = theta + M;
-  Tnull[0] = maxT0[ (int)(alpha * (Bf-1))];  // first one already available
-  for(int i = 1; i < M; i++)
-    {
-    Bf = 0;
-    for(int b = 1; b < B; b++ )
+    // FWER
+    double maxT = -INFINITY;
+    for(int r = M-1; r >= 0; r-- )
       {
-      double T = theta[i + b*M];
-      if(isfinite(T)) Bf++;
-      maxT0[b] = T;
+      if( Tb[o[r]] > maxT ) maxT = Tb[o[r]];
+      if( maxT >= T[o[r]] )
+        FWER[o[r]]++;
       }
-    if( Bf == 0 ) 
+
+    // FDR
+    int q = 0;
+    double V = 0;
+    for(int r = 0;  r < M; r++ )
       {
-      Tnull[i] = Tnull[i-1]; // conservative truncation
-      continue;
+      while( q < M-1 && Tb[ob[q]] >= T[o[r]] )
+        { 
+        V++;
+        q++;
+        }
+      FDR[ o[r] ] += V;
       }
-    QSORT(int, Bf, double, maxT0, _u > _v );
-    Tnull[i] = maxT0[ (int)(alpha * (Bf-1))];
+
+    double W0b = M;
+    for(int r = M-1; r >= 0; r-- )
+      if( Tb[ob[r]] > T0 ) 
+        { W0b -= r; break; }
+    W0ave += W0b;
     }
 
-  // ordering of the observed T (for the number of 'discovery')
-  QSORT( int, M, int, o, theta[_u] > theta[_v] );
-  for(int i = 0; i < M; i++ )
+  FWER[o[0]] /= B;
+  for(int r = 1; r < M; r++ )
     {
-    double T = theta[o[i]];
-    int j;
-    for(j = 0; j < M && Tnull[j] > T; j++ )
-      j++;
-    FDP[o[i]] = (double)j/(i+1);
+    FWER[ o[r] ] /= B;
+    if( FWER[o[r-1]] > FWER[o[r]] )
+      FWER[o[r]] = FWER[o[r-1]];
     }
-  for(int i = M-2; i >= 0; i-- ) // step-up
-    if( FDP[o[i]] > FDP[o[i+1]] ) FDP[o[i]] = FDP[o[i+1]];
 
-  free(maxT0);
+  W0ave /= (B-1);
+  FDR[o[M-1]] /= (B-1) * M;
+  for(int r = M-2; r >= 0; r-- )
+    {
+    FDR[o[r]] /= (B-1) * (r+1) * W0ave/W0;
+    if( FDR[o[r+1]] < FDR[o[r]])
+      FDR[o[r]] = FDR[o[r+1]];
+    }
+  
   free(nf);
 }

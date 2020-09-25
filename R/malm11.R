@@ -1,4 +1,4 @@
-malm11 <- function( y, w = NULL,
+malm11 <- function( y, w = NULL, family=0,
   iter_max=30, epsilon=1e-4,y0=0,verbose=0 )
 {
   n <- dim(y)[2]
@@ -13,7 +13,7 @@ malm11 <- function( y, w = NULL,
     gamma=as.double(rep(1,m)),
     psi=as.double(rep(1,m)),
     L=double(1),
-    iopt=as.integer(c(verbose,iter_max)),
+    iopt=as.integer(c(family,verbose,iter_max)),
     dopt=as.double(c(epsilon)),
     NAOK=TRUE,
     PACKAGE="acdx"

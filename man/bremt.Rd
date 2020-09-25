@@ -4,7 +4,7 @@
 \description{Calculate various significance testing statistics
   from a genome-wide scores with bootstrap replicates.}
 \usage{
-  bremt(theta, alpha=0.05)
+  bremt(theta, T0=0.05)
 }
 \arguments{
   \item{theta}{A matrix of genes (rows) versus bootstraps (columns)
@@ -13,9 +13,14 @@
   \item{alpha}{Significance level threshold.}
 }
 \details{
-  This function computes per-comparison error rate (PCER), family-wise error rate (FWER)
-  and false-discovery proportion (FDP) from a set of gene-wise
+  This function computes per-comparison error rate (PCER),
+  family-wise error rate (FWER)
+  and false-discovery rate (FDR) from a set of gene-wise
   scores with bootstrap replicates.
+
+  FWER and FDR are calculated using algorithm in box 2 and 5,
+  respectively, of
+  Ge, Dudoit, Speed (2003) Test 12:1.
 }
 \value{
   A numeric matrix with genes as the row (in the original input
@@ -27,10 +32,9 @@
   \item{T}{\code{theta/SE}}
   \item{PCER}{Bootstrap one-sided p-value for each gene. The null
     distribution is from the centered bootstrap replicates.}
-  \item{FWER}{Multiple testing p-value based on the MaxT method
-    of Westfall-Young (1993)}
-  \item{FDP}{False discovery proportion, similar to FDR, but based
-  on the ranked bootstrap values instead of theoretical distribution.}
+  \item{FWER}{Multiple testing p-value based on the step-down
+    MaxT method}
+  \item{FDR}{False discovery rate.}
 }
 \examples{
   ## see the 'quick tutorial'

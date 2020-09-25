@@ -12,7 +12,10 @@
     N=NULL,
     L=NULL,
     sep=",",
-    na.rm=FALSE
+    na.rm=FALSE,
+    include=NULL,
+    exclude=NULL,
+    multest_funct=bremt
     )
 }
 \arguments{
@@ -31,6 +34,14 @@
    Can be changed if comma is already used as part of the names.}
  \item{na.rm}{Skip coefficients if they are \code{NA}. The default
    is to make the interest score \code{NA} for any missing coefficient.}
+  \item{include}{Vector of gene names to be included. If \code{NULL} (default),
+    all are included. If specified, it excludes all but those
+  in the set.}
+  \item{exclude}{A vector of gene names to be excluded. If \code{NULL} (default),
+    none is excluded (from the result of applying \code{include=}).}
+  \item{multest_func}{Multiple-testing procedure callback function. It
+    should take a matrix of interest scores with
+    genes as rows and bootstraps as column.}
 }
 \details{
   \code{questmm} calculates, for each gene and each bootstrap

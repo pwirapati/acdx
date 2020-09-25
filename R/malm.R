@@ -1,11 +1,25 @@
 malm <- function(
-  Y, X, w=NULL, offset=NULL, G=NULL,
+  Y, X, w=NULL, offset=NULL, G=NULL,family=0,
   iter_max=40,epsilon=1e-4,y0=1e-5,
   bt_iter_max=4,bt_step=0.5,bt_tol=1,
-  verbose=0  
+  verbose=0
 )
 {
-  if(length(dim(Y)) < 3 ) stop("length(dim(Y)) < 3")
+  if(length(dim(Y)) == 2  )
+    {
+    if(dim(Y)[1] != 2)
+      {
+      YY <- array(0,dim=c(2,dim(Y)))
+      YY[1,,] <- Y
+      Y <- YY
+      }
+    else
+      dim(Y) <- c(dim(Y),1)
+    }
+  else if(is.null(dim(Y)) || length(dim(Y))==1 )
+    {
+    Y <- array( rbind(c(Y),0),dim=c(2,length(Y),1))
+    }
   n <- dim(Y)[2]
   m <- dim(Y)[3]
   if(!is.matrix(X)) X <- cbind(X)
@@ -27,7 +41,7 @@ malm <- function(
     beta=double(p*m),
     phi=double(q*m),
     L=double(m),
-    iopt=as.integer(c(verbose,iter_max,bt_iter_max)),
+    iopt=as.integer(c(family,verbose,iter_max,bt_iter_max)),
     dopt=as.double(c(epsilon,bt_tol,bt_step)),
     n_iter=integer(1*m),
     NAOK=TRUE,

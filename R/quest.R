@@ -18,7 +18,11 @@ questmm <- function(
   N=NULL,
   L=NULL,
   sep=",",
-  na.rm=FALSE
+  na.rm=FALSE,
+  include=NULL,
+  exclude=NULL,
+  multest_func=bremt,
+  ...   # options to multest_func
   )
 {
   coef_names <- dimnames(param)[[1]]
@@ -71,6 +75,16 @@ questmm <- function(
   idLcoef <- match( ptab[idL,1], coef_names)
   idLctype <- match( ptab[idL,2], ctype_names)
 
+  g <- dimnames(param)[[2]]
+  if(!is.null(include))
+    g <- intersect(g,include)
+  if(!is.null(exclude))
+    g <- setdiff(g,exclude)
+
+  if(length(g)==0)
+    stop("No genes are pre-selected")
+
+  param <- param[,g,,]
   r <- .C("mmdiff",
     dims=as.integer(dim(param)),
     param=as.double(param),
@@ -88,5 +102,5 @@ questmm <- function(
   r$param <- NULL
   dim(r$theta) <- c(dim(param)[2],dim(param)[4])
   rownames(r$theta) <- dimnames(param)[[2]]
-  bremt(r$theta)
+  multest_func(r$theta,...)
 }
