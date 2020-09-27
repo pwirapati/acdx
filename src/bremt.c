@@ -92,8 +92,8 @@ bremt(
   QSORT(int, M, int, o, T[_u] > T[_v]);
 
   double W0 = M, W0ave = 0;
-  for(int r = M-1; r >= 0; r-- )
-    if( T[o[r]] > T0 ) 
+  for(int r = 0; r < M; r++ )
+    if( T[o[r]] <= T0 ) 
       { W0 -= r; break; }
 
   for(int b = 1; b < B; b++ )
@@ -126,8 +126,8 @@ bremt(
       }
 
     double W0b = M;
-    for(int r = M-1; r >= 0; r-- )
-      if( Tb[ob[r]] > T0 ) 
+    for(int r = 0; r < M; r++ )
+      if( Tb[ob[r]] <= T0 ) 
         { W0b -= r; break; }
     W0ave += W0b;
     }

@@ -16,10 +16,14 @@ bremt <- function(theta,T0=.2)
     )
   dim(r$theta) <- dim(theta)
   out <- cbind(
-    theta=theta[,1],SE=r$SE,'T'=r$theta[,1],
-    PCER=r$PCER,
-    FWER=r$FWER,
-    FDR=r$FDR)
-  rownames(out) <- rownames(theta)
-  out
+      theta=theta[,1],SE=r$SE,'T'=r$theta[,1],
+      PCER=r$PCER,
+      FWER=r$FWER,
+      FDR=r$FDR)
+
+  structure(
+    out,
+    rownames = rownames(theta),
+    M = M,
+    class=c("mtp",class(out)))
 }

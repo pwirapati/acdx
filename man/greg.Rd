@@ -4,7 +4,7 @@
 \description{Produce aggregate expression profiles from raw counts}
 \usage{
   greg( x, cell_sample, cell_type, cell_names=NULL,
-    v0 = 1/12, sep="\t", verbose=1 )
+    s2_0 = 1/12, sep="\t", verbose=1 )
 }
 \arguments{
   \item{x}{Raw counts in sparse dgCMatrix format, with genes as rows
@@ -21,7 +21,7 @@
     then it is considered an error. The both names are
     present, only the intersection are used, silently dropping
     the mismatches, and the ordering is not important.}
-  \item{v0}{Baseline variance, with the default 1/12 equals to that of
+  \item{s2_0}{Baseline variance, with the default 1/12 equals to that of
     the uniform distribution in an interval of width one.}
   \item{sep}{Column separator character; relevant only when \code{x} is
     a file of text table.}
@@ -31,7 +31,7 @@
   The summary for each gene in an aggregate is the mean of raw counts,
   accompanied by an estimate of the variance of the mean (i.e., squared
   standard error). This variance is estimated by the sample variance
-  plus \code{v0}, divided by the number of cells minus one.
+  plus \code{s2_0}, divided by the number of cells minus one.
 
   If the cell count is zero or one, the variance is infinite (the
   mean is set to zero or the single-cell value, respectively).

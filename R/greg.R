@@ -3,7 +3,7 @@ greg <- function(
   cell_sample,
   cell_type, 
   cell_names = NULL, # cell names, to be matched with names in x
-  v0 = 1/12, 
+  s2_0 = 1/12, 
   sep="\t", verbose = 1 )
 {
   if(length(cell_sample) != length(cell_type))
@@ -24,6 +24,7 @@ greg <- function(
   
   if( is.matrix(x) || is(x,"sparseMatrix" ))
     {
+    src <- "Matrix"
     # cell_names && no colnames: error
     # cell_names && colnames: intersect
     # no cell_nmaes && no colnames: assume integer, length must match
@@ -70,13 +71,14 @@ greg <- function(
           Sx <- rowSums( x[,l] )
           Sxx <- rowSums( x[,l]^2 )
           y[1,i,,k] <- Sx/Nik
-          y[2,i,,k] <- (v0 + (Sxx-Sx*Sx/Nik)/(Nik-1))/Nik
+          y[2,i,,k] <- (s2_0 + (Sxx-Sx*Sx/Nik)/(Nik-1))/Nik
           }
         } # k
       } # i
     }
   else if( is.character(x) && length(x)==1 ) # interpret x as a filename
     {
+    src <- "file"
     f <- gzfile(x,open="rt")
 
     h <- strsplit( readLines(f,1), sep, fixed=TRUE )[[1]]
@@ -126,7 +128,7 @@ greg <- function(
           {
           yc <- counts[cidx[i,k][[1]]]
           y[1,i,n_gene,k] <- mean(yc)
-          SE2 <- (stats::var(yc) + v0)/N[i,k]
+          SE2 <- (stats::var(yc) + s2_0)/N[i,k]
           if(is.na(SE2)) SE2 <- Inf
           y[2,i,n_gene,k] <- SE2
           }
@@ -146,10 +148,55 @@ greg <- function(
     close(f)
     y <- y[,,1:n_gene,]
     gc()
+
+    }
+  else if( class(x) == "ac" || class(x) == "greg") # to convert old format
+    {
+    src <- class(x)
+    y <- x$y
+    N <- x$N
     }
   
-  structure( list(N=N,y=y), class="greg")
+  gene_mean <- apply(y[1,,,],2,mean,na.rm=T)
+  gene_cv <- apply(y[1,,,],2,sd,na.rm=T)/gene_mean
+
+  structure(
+    list(
+      N=N,
+      y=y,
+      source=src,
+      gene_mean = gene_mean,
+      gene_cv = gene_cv
+      ),
+   class="ac")
 }
+
+print.ac <- function(ac)
+{
+  cat("Aggregated cells\n")
+  cat("number of cells = ", sum(ac$N),"\n",sep="")
+  cat("number of aggregates = ",length(ac$N),", (non-empty = ",sum(ac$N > 1),")\n",sep="")
+  cat("number of cell types = ",ncol(ac$N),"\n",sep="")
+  cat("number of genes = ",dim(ac$y)[3],", (all zeroes = ", sum(ac$gene_mean==0),")\n",sep="")
+}
+
+plot.ac <- function(ac,cex=.25,pch=20,n_names=20,...)
+{
+  rcv <- range(ac$gene_cv[is.finite(ac$gene_cv)])
+  wcv <- (rcv[2]-rcv[1])/n_names
+  plot( log10(ac$gene_mean), ac$gene_cv,
+   xlab="gene mean", ylab="gene CV", axes=FALSE,
+   cex=cex,pch=pch, ylim=c(0,rcv[2]),
+    ,...)
+  axis(side=2)
+  axis(side=1,at=-5:5,labels=10^{-5:5})
+  
+  gbin <- .bincode(ac$gene_cv,seq(rcv[1]-wcv,rcv[2]+wcv, wcv))
+  g <- tapply( ac$gene_mean, gbin, function(u) names(which.max(u)))
+  text( log10(ac$gene_mean[g]),ac$gene_cv[g],labels=g, adj=c(-.2,.5),xpd=TRUE)
+}
+
+
 
 rm_ctype <- function(ac,cid=NULL)
 {
