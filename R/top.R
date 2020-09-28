@@ -32,7 +32,7 @@ top <- function(
     )
 }
 
-plot.top <- function( ttab, alpha=0.05,
+plot_top_rank <- function( ttab, alpha=0.05,
   xlim=NULL, xlim.frac=0.25,
   lwd=1,col=c("red3","blue3",gray(.333)), ... )
 {
@@ -69,3 +69,66 @@ plot.top <- function( ttab, alpha=0.05,
   mtext(text=paste("\u2264", alpha),side=3,line=1,at=tat,adj=tadj,col=col)
   mtext(text=c("FWER","FDR","PCER"),side=3,line=2,at=tat,adj=tadj,col=col)
 }
+
+
+local_max <- function( x, y, nbins )
+{
+  rx <- range(x)
+  dx <- diff(rx)/nbins
+  b <- .bincode( x, seq(rx[1]-dx,rx[2]+dx,dx ))
+  names(y) <- 1:length(y)
+  as.integer(tapply(y,b,function(u)names(which.max(u))))
+}
+
+
+plot_top_stat <- function( ttab, n_names=40, alpha=0.05, onesided=TRUE, 
+  cex=1,pch=20,lwd=2,
+  ... )
+{
+  opar <- par(no.readonly=TRUE)
+  on.exit(par(opar))
+
+  mar <- par('mar')
+  if(mar[4] < 4) { mar[4] <- 4; par(mar=mar) }
+
+  if( onesided )
+    {
+    ttab <- ttab[ ttab$theta >= 0, ]
+    xmax <- 1.2 * max(ttab$theta)
+    ymax <- 1.2 * max(ttab$T)
+    }
+  else
+    stop("two sided not implemented")
+
+  plot( ttab$theta, ttab$T, cex=cex, pch=pch, axes=FALSE,
+    frame=TRUE,xlab="exp(theta)",ylab="T",
+    xlim=c(0,xmax),ylim=c(0,ymax),
+    ... )
+  fc <- sapply(-1:3,function(p) c(1,2,5)*10^p,simplify=TRUE)
+  axis(side=1, at=log(fc),labels=as.character(fc))
+  axis(side=2)
+  FWERcutoff <- ttab[ sum(ttab$FWER <= alpha),"T"]
+  abline(h=FWERcutoff,col=2,lty=2,lwd=lwd )
+  mtext(side=4,at=FWERcutoff,text=paste0("FWER\n",alpha),col=2,las=2,line=1)
+
+  FDRcutoff <- ttab[ sum(ttab$FDR <= alpha),"T"]
+  abline(h=FDRcutoff,col=4,lty=2,lwd=lwd )
+  mtext(side=4,at=FDRcutoff,text=paste0("FDR\n",alpha),col=4,las=2,line=1)
+
+  gh <- local_max( ttab$T, ttab$theta, n_names)
+  gv <- local_max( ttab$theta, ttab$T, n_names)
+
+  g <- union(gh,gv) 
+  g <- g[ttab[g,"T"] >= FWERcutoff | ttab[g,"T"] >=FDRcutoff]
+  text( labels=rownames(ttab)[g], ttab[g,"theta"],ttab[g,"T"],adj=c(-.1,.5))
+
+}
+
+plot.top <- function( ttab, type="rank", ... )
+{
+  typeid <- pmatch(type,c("rank","pvalue","stat","volcano"))
+  if(typeid ==1 || typeid == 2)
+    plot_top_rank( ttab, ... )
+  else if( typeid == 3 || typeid == 4 )
+    plot_top_stat( ttab, ... )
+} 

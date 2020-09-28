@@ -26,7 +26,7 @@ dtext <- function(
     wmax <- max(sapply(r$values,strwidth,"i"),na.rm=T)
     b <- cumsum(r$lengths)
     m <- length(b)
-    a <- c(0,b[-m]+1)
+    a <- c(0,b[-m])+1
     inc <- !is.na(r$values)
     list(labels=r$values[inc],a=a[inc],b=b[inc],wmax=wmax)
     },simplify=FALSE)

@@ -35,7 +35,7 @@ malm_acdx (
   double *alpha,      // n_sample x n_ctype x n_boot
   double *beta,       // n_coef x n_gene x n_ctype x n_boot
   double *phi,        // n_disp x n_gene x n_ctype x n_boot
-  const double *y0,
+  const double *shifts,
   const int *norm_method,
   const int *iopt11_,
   const double *dopt11_,
@@ -50,6 +50,9 @@ malm_acdx (
   int n_ctype = dim[4];
   int n_bid = dim[5];   // number of bootstrap blocks
   int n_boot = dim[6];   // number of bootstrap resamples
+
+  const double u0 = shifts[0];
+  const double s2_0 = shifts[1];
 
   // precompute sample weights for bootstrap, which is also
   // cell-type specific
@@ -74,8 +77,20 @@ malm_acdx (
     }
 
 
-  for(int i = 0; i < n_sample * n_gene * n_ctype; i++ )
-    Y[i].u += y0[0];
+  for(int k = 0; k < n_ctype; k++ )
+    {
+    uv *Yk = Y + k*n_sample*n_gene;
+    const double *Nk = N + k*n_sample;
+    for(int j = 0; j < n_gene; j++ )
+      {
+      uv *Yjk = Yk + j*n_sample;
+      for(int i = 0; i < n_sample; i++ )
+        {
+        Yjk[i].u += u0;
+        Yjk[i].v += s2_0/Nk[i];
+        }
+      }
+    }
 
   const int n_thread = omp_get_max_threads();
   uv *E = (uv*)malloc( sizeof(uv) * n_sample * n_gene * n_thread );
