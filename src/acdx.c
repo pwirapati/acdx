@@ -35,7 +35,7 @@ malm_acdx (
   double *alpha,      // n_sample x n_ctype x n_boot
   double *beta,       // n_coef x n_gene x n_ctype x n_boot
   double *phi,        // n_disp x n_gene x n_ctype x n_boot
-  const double *shifts,
+  const double *yeps,
   const int *norm_method,
   const int *iopt11_,
   const double *dopt11_,
@@ -51,8 +51,8 @@ malm_acdx (
   int n_bid = dim[5];   // number of bootstrap blocks
   int n_boot = dim[6];   // number of bootstrap resamples
 
-  const double u0 = shifts[0];
-  const double s2_0 = shifts[1];
+  const double u_0 = yeps[0];
+  const double s2_0 = yeps[1];
 
   // precompute sample weights for bootstrap, which is also
   // cell-type specific
@@ -86,7 +86,7 @@ malm_acdx (
       uv *Yjk = Yk + j*n_sample;
       for(int i = 0; i < n_sample; i++ )
         {
-        Yjk[i].u += u0;
+        Yjk[i].u += u_0;
         Yjk[i].v += s2_0/Nk[i];
         }
       }

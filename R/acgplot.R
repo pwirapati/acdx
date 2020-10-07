@@ -17,9 +17,10 @@ acgplot <- function( ac, gene,
   pch=20,
   col.dot=NULL,
   N.dot=TRUE,
-  cex.dot=0.5,
+  cex.dot=0.8,
   lwd.conf=1,
   lty.conf=1,
+  las=c(0,0),
   legend.key=NULL,
   pbulk=F,
   ...     # options to 'plot.default'
@@ -27,6 +28,9 @@ acgplot <- function( ac, gene,
 {
   # pardefault <- par(no.readonly=TRUE)
   # on.exit(par(pardefault))
+  opar <- par(no.readonly=TRUE)
+  on.exit(par(opar))
+
 
   if(is.null(o)) o <- 1:nrow(ac$N)
   else if(!is.numeric(o) || min(o) < 1 || max(o) > nrow(ac$N))
@@ -58,8 +62,7 @@ acgplot <- function( ac, gene,
 
   if(adjusted && gene != '#' && gene != '%')
     {
-    if(is.null(fit)) stop("fit object not supplied")
-    y <- y/exp(c(fit$alpha[o,,1]))
+    y <- y/c(ac$aggr_scale[o,])
     }
   n_sample <- length(o)
   n_ctype <- dim(ac$y)[4]
@@ -103,9 +106,12 @@ acgplot <- function( ac, gene,
       }
     }
 
+  ymax <- max(log(y+s),na.rm=TRUE)
+
   plot( log(y+s), axes=FALSE,frame=TRUE, xlab="",
-        ylab=paste(ifelse(adjusted,"adjusted","raw"),"counts"),main=g,
-        xaxs="i",xlim=c(.5,length(y)+.5),
+        ylab=paste(ifelse(adjusted,"adjusted","raw"),ifelse(pbulk,"pseudobulk",
+            "mean"), "counts"),main=g,
+        xaxs="i",xlim=c(.5,length(y)+.5),ylim=c(log(s),ymax),
         col=col.dot,cex=cex,pch=pch,... )
 
   if(conf.bar)
@@ -123,14 +129,12 @@ acgplot <- function( ac, gene,
   axt <- c(0,c(sapply((p-3):(p+1),function(r) c(.2,.5,1)*10^r)))
   axis(side=2,at=log(axt+s),labels=axt,las=2)
 
-  # cell type labels and partition
   abline(v=n_sample * (1:(n_ctype-1)) + .5,lty=2)
-  mtext(side=1,line=n_tags+1,at=n_sample*seq(0.5,n_ctype,1),text=dimnames(ac$y)[[4]])
 
-  if(!is.null(sample_tags))
-    for(k in 1:n_ctype)
-      for(a in 1:n_tags)
-        gmtext(sample_tags[o,a],line=a,off=(k-1)*n_sample)
+  L <- list(    c( sapply(colnames(ac$N),function(u) rep(u,nrow(ac$N)))))
+  if(!is.null(ac[["a"]]))
+    L <- c( list(rep( (ac$a$tissue)[o],ncol(ac$N))), L ) 
+  acdx:::dtext( L, side=1,line=0, bspace=1,las=las)
 
   if(!is.null(legend.key))
     {

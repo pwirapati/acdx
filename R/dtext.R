@@ -1,6 +1,3 @@
-##
-## TODO bug in deciding text width for side=1 or side=3
-##
 dtext <- function(
   L,  # list of labels, from inner- to outer-most
   side=1,

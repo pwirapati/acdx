@@ -1,6 +1,6 @@
 malm <- function(
   Y, X, w=NULL, offset=NULL, G=NULL,family=0,
-  iter_max=40,epsilon=1e-4,y0=1e-5,
+  iter_max=40,epsilon=1e-4,u_0=1e-5,
   bt_iter_max=4,bt_step=0.5,bt_tol=1,
   verbose=0
 )
@@ -32,7 +32,7 @@ malm <- function(
   q <- length(unique(Gi))
   r <- .C("malm",
     dim=as.integer(c(n,m,p,q)),
-    Y=as.double(Y + c(y0,0)),
+    Y=as.double(Y + c(u_0,0)),
     w=as.double(w),
     Xt=as.double(t(X)),
     Gi=as.integer(Gi),

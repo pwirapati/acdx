@@ -7,6 +7,8 @@ importFrom("stats", "quantile", "sd","na.omit")
 importFrom("abind","abind")
 import(Matrix)
 
+export(tab2spar)
+
 export(greg)
 S3method(print,ac)
 S3method(plot,ac)
@@ -14,9 +16,16 @@ export(print.ac,plot.ac)
 
 export(acgplot)
 export(acdx)
-export(questf,questmm)
+
+export(quest,questf,questmm)
+
 export(bremt)
 export(top)
 S3method(plot,top)
 export(plot.top)
+
+export(coldmap)
+export(coldmap.ac)
+S3method(coldmap,ac)
+
 exportPattern("Romp_")

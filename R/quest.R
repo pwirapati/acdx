@@ -10,7 +10,12 @@ questf <- function(fit, ifun)
   bremt(theta_boot)
 }
 
-questmm <- function(
+questmm <- function(...)
+{
+  quest(method="minmax",...)
+}
+
+quest <- function(
   param,
   showcomb = F,
   default="L",
@@ -21,10 +26,14 @@ questmm <- function(
   na.rm=FALSE,
   include=NULL,
   exclude=NULL,
+  method="minmax",
   multest_func=bremt,
   ...   # options to multest_func
   )
 {
+  if(class(param)=="acdx_fit")
+    param <- param$beta
+
   coef_names <- dimnames(param)[[1]]
   n_coef <- length(coef_names)
   ctype_names <- dimnames(param)[[3]]
@@ -85,7 +94,11 @@ questmm <- function(
     stop("No genes are pre-selected")
 
   param <- param[,g,,]
-  r <- .C("mmdiff",
+
+  if(method=="ave") cfunc <- "avediff"
+  else cfunc <- "mmdiff"
+
+  r <- .C(cfunc,
     dims=as.integer(dim(param)),
     param=as.double(param),
     nH=as.integer(length(idH)),

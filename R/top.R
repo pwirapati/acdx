@@ -2,7 +2,7 @@ top <- function(
   mtp,
   sort.by="T",
   aux=NULL,
-  n=10,
+  n=Inf,
   decreasing=T,
   ...    # other options for order
   )
