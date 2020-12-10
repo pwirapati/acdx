@@ -26,10 +26,8 @@ acgplot <- function( ac, gene,
   ...     # options to 'plot.default'
 )
 {
-  # pardefault <- par(no.readonly=TRUE)
-  # on.exit(par(pardefault))
-  opar <- par(no.readonly=TRUE)
-  on.exit(par(opar))
+  opm <- par('mar')
+  on.exit(par(mar=opm))
 
 
   if(is.null(o)) o <- 1:nrow(ac$N)

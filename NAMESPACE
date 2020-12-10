@@ -28,4 +28,6 @@ export(coldmap)
 export(coldmap.ac)
 S3method(coldmap,ac)
 
+export(vdot)
+
 exportPattern("Romp_")

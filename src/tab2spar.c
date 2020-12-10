@@ -1,6 +1,6 @@
 /*
  * tab2spar.c - read tab-delimited data table from R connection into
- *                a spar row format
+ *              a sparse `dgCMatrix` format
  *
  */
 

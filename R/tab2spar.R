@@ -1,3 +1,7 @@
+# Read tab-delimited containing dense matrix data, and covert
+# to dgCMatrix. The input is a connection that can be optionally
+# compressed.
+#
 tab2spar <- function(con, transpose=FALSE)
 {
   if(!inherits(con,"connection"))

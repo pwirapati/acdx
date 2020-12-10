@@ -64,7 +64,7 @@ plot_ac_aggrsum <- function( ac, o=NULL, s=1e-3, pad=2, ... )
   par(mar=oldmar+c(4,0,-2,0))
   plot.new()
   plot.window(xlim=xlim,xaxs="i",ylim=log(s+c(0,1000)))
-  boxplot.matrix( log(s+apply(ac$y[1,o,KUL3$gene_mean > 0,],2,c)),
+  boxplot.matrix( log(s+apply(ac$y[1,o,ac$gene_mean > 0,],2,c)),
     border=gray(.5), 
     use.cols=FALSE,outline=F,add=TRUE,axes=FALSE,frame=TRUE
     )
