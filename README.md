@@ -20,4 +20,4 @@ Feature highlights:
 * Multiple-testing significance analysis based on bootstrap resampling
 * Visualization of per-gene expression patterns using forest plots
 
-[Tutorial for v1.1.0](https://pwirapati.github.io/acdx/inst/doc/tutorial.html)
+[Tutorial for v1.1.0](https://pwirapati.github.io/acdx/inst/doc/qtutorial.html)
