@@ -2,9 +2,9 @@
 
 ## NOTE
 
-There is major change of interface in v1.1.0. If you'd like to keep old analysis, install by specifying the version:
+There is major change of interface in v1.0.1. If you'd like to keep old analysis, install by specifying the version:
 ```
-devtools::install_github("pwirapati/acdx@v1.1.0")
+devtools::install_github("pwirapati/acdx@v1.0.1")
 ```
 
 
