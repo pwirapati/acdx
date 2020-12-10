@@ -29,5 +29,3 @@ export(ghmap.ac)
 S3method(ghmap,ac)
 
 export(vdot)
-
-exportPattern("Romp_")
