@@ -1,5 +1,5 @@
 #ifndef _ETC_H_
-#define _ETC_H
+#define _ETC_H_
 
 typedef struct
   {
