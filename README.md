@@ -1,5 +1,15 @@
 # AC&#x26A1;DX: Aggregated Cells Differential eXpression
 
+## NOTE
+
+There is major change of interface in v1.0.1. If you'd like to keep old analysis, install by specifying the version:
+```
+devtools::install_github("pwirapati/acdx@v1.0.1")
+```
+
+
+## Blurbs
+
 This is an R package for performing aggregation of single-cell expression profiles and rank genes based on specified patterns of changes in expression across combinations of cell types and conditions.
 
 Feature highlights:
@@ -10,4 +20,4 @@ Feature highlights:
 * Multiple-testing significance analysis based on bootstrap resampling
 * Visualization of per-gene expression patterns using forest plots
 
-[Tutorial](https://pwirapati.github.io/acdx/inst/doc/tutorial.html)
+[Tutorial for v1.1.0](https://pwirapati.github.io/acdx/inst/doc/qtutorial.html)
