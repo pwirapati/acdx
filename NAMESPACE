@@ -24,9 +24,9 @@ export(top)
 S3method(plot,top)
 export(plot.top)
 
-export(coldmap)
-export(coldmap.ac)
-S3method(coldmap,ac)
+export(ghmap)
+export(ghmap.ac)
+S3method(ghmap,ac)
 
 export(vdot)
 
