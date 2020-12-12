@@ -4,17 +4,17 @@
 \description{Sort, show and select top-ranking genes from
   a significance testing summary matrix.}
 \usage{
-  top( sigsum,
+  top( 
+    mtp,
     sort.by="T",
     aux=NULL,
-    n=10,
-    digits=4,
+    n=Inf,
     decreasing=T,
     ...    # other options for sort.list
     )
 }
 \arguments{
-  \item{sigsum}{Significance summary objects, such as the result
+  \item{mtp}{Multiple-testing objects, such as the result
     of \code{\link{bremt}}}
   \item{sort.by}{Sorting rules. Can be a vector of selected column names
     in \code{sigsum} and \code{aux}. Ordering is prioritized
@@ -26,7 +26,6 @@
   together, the columns of \code{aux} can be used in the sorting keys.}
   \item{n}{The number of rows shown. Any values outside \code{1:nrow(sigsum)}
    (including non-numeric or NA) is interpreted as all rows.}
-  \item{digits}{Number of digits for the values}
   \item{decreasing}{The default sorting direction, if the key is not prefixed
     by \code{"-"}.}
   \item{...}{Other options for \code{\link{order}}}

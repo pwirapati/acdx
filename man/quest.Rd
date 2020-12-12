@@ -1,10 +1,11 @@
-\name{questmm}
+\name{quest}
+\alias{quest}
 \alias{questmm}
 \title{Question differential expression patterns using min-max model.}
 \description{Rank genes according to difference between the minimum
   of a set of parameter and the maximum of another sets.}
 \usage{
-  questmm(
+  quest(
     param,
     showcomb = F,
     default="L",
@@ -15,8 +16,11 @@
     na.rm=FALSE,
     include=NULL,
     exclude=NULL,
-    multest_func=bremt
+    method="minmax",
+    multest_func=bremt,
+    ...
     )
+  questmm(...)
 }
 \arguments{
   \item{param}{A parameter object that is a part of \code{\link{acdx}}
@@ -39,9 +43,11 @@
   in the set.}
   \item{exclude}{A vector of gene names to be excluded. If \code{NULL} (default),
     none is excluded (from the result of applying \code{include=}).}
+  \item{method}{Interest functional method.}
   \item{multest_func}{Multiple-testing procedure callback function. It
     should take a matrix of interest scores with
     genes as rows and bootstraps as column.}
+  \item{...}{Arguments to \code{multest_func}}
 }
 \details{
   \code{questmm} calculates, for each gene and each bootstrap

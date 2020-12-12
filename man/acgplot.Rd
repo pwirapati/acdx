@@ -14,9 +14,10 @@ acgplot( ac, gene,
   pch=20,
   col.dot=NULL,
   N.dot=TRUE,
-  cex.dot=0.5,
+  cex.dot=0.8,
   lwd.conf=1,
   lty.conf=1,
+  las=c(0,0),
   legend.key=NULL,
   pbulk=F,
   ... )    # options to 'plot.default'
@@ -47,6 +48,7 @@ acgplot( ac, gene,
   \item{cex.dot}{Dot size scale factor}
   \item{lwd.conf}{Line width of confidence bars.}
   \item{lty.conf}{Line type of confidence bars.}
+  \item{las}{Group label directionality}
   \item{legend.key}{A vector of dot colors with names corresponding
     to the labels to be shown in the legend. Used in conjuction
     with \code{col.dot=}}

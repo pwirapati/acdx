@@ -4,7 +4,8 @@
 \description{Produce aggregate expression profiles from raw counts}
 \usage{
   greg( x, cell_sample, cell_type, cell_names=NULL,
-    s2_0 = 1/12, sep="\t", verbose=1 )
+    u_0 = NULL, s2_0 = 1/12, 
+    sep="\t", verbose=1 )
 }
 \arguments{
   \item{x}{Raw counts in sparse dgCMatrix format, with genes as rows
@@ -21,6 +22,7 @@
     then it is considered an error. The both names are
     present, only the intersection are used, silently dropping
     the mismatches, and the ordering is not important.}
+  \item{u_0}{Constant shift from the origin}
   \item{s2_0}{Baseline variance, with the default 1/12 equals to that of
     the uniform distribution in an interval of width one.}
   \item{sep}{Column separator character; relevant only when \code{x} is

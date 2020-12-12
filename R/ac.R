@@ -12,12 +12,18 @@ print.ac <- function(x,...)
 
 plot.ac <- function( x,... )
 {
-  plot_ac_genesum( x, ... )
-}
-
-sumplot.ac <- function(object, ... )
-{
-  plot_ac_aggrsum(object, ... )
+  arg <- list(...)
+  if(is.null(arg$type))
+    type <- "genesum"
+  else
+    type <- arg$type
+  
+  if(type == "genesum")
+    plot_ac_genesum( x, ... )
+  else if(type == "aggrsum" )
+    plot_ac_aggrsum( x, ... )
+  else
+    stop(paste0("plot.ac type: ",type," is not supported."))
 }
 
 plot_ac_genesum <- function(ac,cex=.25,pch=20,n_names=20,...)

@@ -7,15 +7,12 @@ import(stats)
 importFrom("abind","abind")
 import(Matrix)
 
-export(sumplot)
-
 export(tab2spar)
 
 export(greg)
 S3method(print,ac)
 S3method(plot,ac)
-S3method(sumplot,ac)
-export(print.ac,plot.ac,sumplot.ac)
+export(print.ac,plot.ac)
 
 export(acgplot)
 export(acdx)

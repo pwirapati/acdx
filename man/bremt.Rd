@@ -4,13 +4,13 @@
 \description{Calculate various significance testing statistics
   from a genome-wide scores with bootstrap replicates.}
 \usage{
-  bremt(theta, alpha=0.05)
+  bremt(theta, T0=0.2)
 }
 \arguments{
   \item{theta}{A matrix of genes (rows) versus bootstraps (columns)
     containing the score of interest (bigger value is better).
   The original (non-bootstrap) values are in the first column.}
-  \item{alpha}{Significance level threshold.}
+  \item{T0}{Test statistics value below which null is assumed.}
 }
 \details{
   This function computes per-comparison error rate (PCER),
