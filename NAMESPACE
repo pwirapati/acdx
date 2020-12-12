@@ -1,18 +1,21 @@
 useDynLib(acdx)
 
 import(graphics)
-importFrom("grDevices","recordGraphics")
+importFrom("grDevices","recordGraphics","gray","gray.colors")
 importFrom("methods","is")
-importFrom("stats", "quantile", "sd","na.omit")
+import(stats)
 importFrom("abind","abind")
 import(Matrix)
+
+export(sumplot)
 
 export(tab2spar)
 
 export(greg)
 S3method(print,ac)
 S3method(plot,ac)
-export(print.ac,plot.ac)
+S3method(sumplot,ac)
+export(print.ac,plot.ac,sumplot.ac)
 
 export(acgplot)
 export(acdx)

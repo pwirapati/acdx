@@ -4,7 +4,7 @@
 \description{Calculate various significance testing statistics
   from a genome-wide scores with bootstrap replicates.}
 \usage{
-  bremt(theta, T0=0.05)
+  bremt(theta, alpha=0.05)
 }
 \arguments{
   \item{theta}{A matrix of genes (rows) versus bootstraps (columns)

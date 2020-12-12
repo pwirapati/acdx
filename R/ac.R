@@ -1,21 +1,23 @@
-print.ac <- function(ac)
+print.ac <- function(x,...)
 {
-  cat("Aggregated cells from", ac$source,"\n")
-  cat("number of cells = ", sum(ac$N),"\n",sep="")
-  cat("number of samples = ",nrow(ac$N),"\n",sep="")
-  cat("number of cell types = ",ncol(ac$N),"\n",sep="")
-  cat("number of aggregates = ",length(ac$N),", (non-empty = ",sum(ac$N > 1),")\n",sep="")
-  cat("number of genes = ",dim(ac$y)[3]," = ", 
-      sum(ac$gene_mean > 0)," (some positive) + ",
-      sum(ac$gene_mean==0)," (all zeroes))\n",sep="")
+  cat("Aggregated cells from", x$source,"\n")
+  cat("number of cells = ", sum(x$N),"\n",sep="")
+  cat("number of samples = ",nrow(x$N),"\n",sep="")
+  cat("number of cell types = ",ncol(x$N),"\n",sep="")
+  cat("number of aggregates = ",length(x$N),", (non-empty = ",sum(x$N > 1),")\n",sep="")
+  cat("number of genes = ",dim(x$y)[3]," = ", 
+      sum(x$gene_mean > 0)," (some positive) + ",
+      sum(x$gene_mean==0)," (all zeroes))\n",sep="")
 }
 
-plot.ac <- function( ac, genes=NULL, ... )
+plot.ac <- function( x,... )
 {
-  if(is.null(genes))
-    plot_ac_genesum( ac, ... )
-  else if(is.na(genes))
-    plot_ac_aggrsum( ac, ... )
+  plot_ac_genesum( x, ... )
+}
+
+sumplot.ac <- function(object, ... )
+{
+  plot_ac_aggrsum(object, ... )
 }
 
 plot_ac_genesum <- function(ac,cex=.25,pch=20,n_names=20,...)
@@ -54,7 +56,7 @@ plot_ac_aggrsum <- function( ac, o=NULL, s=1e-3, pad=2, ... )
   abline(v=(1:(dim(ac$y)[4]-1))*dim(ac$y)[2] + .5)
 
   Ns <- rep(rowSums(ac$N[o,]),ncol(ac$N))
-  plot( log((.01+c(ac$N[o,]))/(.01+Ns-c(ac$N[o,]))), xlim=xlim, xaxs="i", ylab="cell counts",
+  plot( log((.01+c(ac$N[o,]))/(.01+Ns-c(ac$N[o,]))), xlim=xlim, xaxs="i", ylab="cell proportion",
     axes=FALSE, frame=TRUE, xlab=NA )
   axis(side=2,at=log((+c(.001,.01,.1,.25,.5,.75,.9))/(c(.999,.99,.9,.75,.5,.25,.1))),
     labels=c("0.1%","1%","10%","25%","50%","75%","90%"),las=2)

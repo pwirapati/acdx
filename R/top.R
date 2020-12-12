@@ -124,11 +124,11 @@ plot_top_stat <- function( ttab, n_names=40, alpha=0.05, onesided=TRUE,
 
 }
 
-plot.top <- function( ttab, type="rank", ... )
+plot.top <- function( x, type="rank", ... )
 {
   typeid <- pmatch(type,c("rank","pvalue","stat","volcano"))
   if(typeid ==1 || typeid == 2)
-    plot_top_rank( ttab, ... )
+    plot_top_rank( x, ... )
   else if( typeid == 3 || typeid == 4 )
-    plot_top_stat( ttab, ... )
+    plot_top_stat( x, ... )
 } 

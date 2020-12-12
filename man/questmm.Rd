@@ -15,7 +15,7 @@
     na.rm=FALSE,
     include=NULL,
     exclude=NULL,
-    multest_funct=bremt
+    multest_func=bremt
     )
 }
 \arguments{
