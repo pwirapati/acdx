@@ -158,7 +158,9 @@ greg <- function(
     N <- x$N
     }
 
-  min_nz <- min( y[1,,,][y[1,,,] > 0],na.rm=T )
+  if( is.null(u_0)) u_0 <- 0.5/mean(N)
+
+  y <- y + c( rbind( u_0, s2_0/c(N) ))
 
   gene_mean <- apply(y[1,,,],2,mean,na.rm=T)
   gene_cv <- apply(y[1,,,],2,sd,na.rm=T)/gene_mean
@@ -166,11 +168,10 @@ greg <- function(
   # aggregate and gene scale factors
   gene_scale <- array(dim=c(n_gene,n_ctype))
   aggr_scale <- array(dim=c(n_sample,n_ctype))
-  if( is.null(u_0)) u_0 <- 0.5*min_nz
+
   for(k in 1:n_ctype)
     {
-    fit <- malm11( y[,,,k], w=ifelse(N[,k] > 1,1,0),
-      u_0 = u_0, v_0 = s2_0/N[,k] )
+    fit <- malm11( y[,,,k], w=ifelse(N[,k] > 1,1,0))
     gene_scale[,k] <- exp(fit$beta0)
     aggr_scale[,k] <- exp(fit$alpha)
     }
@@ -180,7 +181,8 @@ greg <- function(
       N=N,
       y=y,
       source=src,
-      min_nz = min_nz,
+      u_0 = u_0,
+      s2_0 = s2_0,
       gene_mean = gene_mean,
       gene_cv = gene_cv,
       gene_scale = gene_scale,

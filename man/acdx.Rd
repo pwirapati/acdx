@@ -7,7 +7,7 @@
     id_boot=NULL, seed_boot=0,
     pbulk=FALSE, mean2sum = TRUE,
     norm_method=1,
-    u_0=NULL, s2_0 = 1/12, verbose=0 )
+    verbose=0 )
   }
 \arguments{
   \item{ac}{Aggregated cell object (output of \code{\link{greg}})}
@@ -20,9 +20,6 @@
   \item{pbulk}{Use pseudo-bulk approach (negative binomial model)}
   \item{mean2sum}{\code{y} is converted from means to sums, if \code{pbulk=TRUE}.}
   \item{norm_method}{normalization method: 0 = none, 1 = per cell-type, 2 = global}
-  \item{u_0}{Small constant added to the data (default: half of smallest
-  nonzero value in the entire dataset)}
-  \item{s2_0}{Small constant variance.}
   \item{verbose}{Print \code{#} for each
     bootstrap replicate when `verbose=1`. The default is silent.}
 }

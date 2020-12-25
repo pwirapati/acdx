@@ -12,8 +12,6 @@ acdx <- function(
 
   norm_method = 1, # normalization methoda: 0 none, 1 per celltype, 2 global
 
-  u_0=NULL,      # small count to be added, 0.5*smallest non zero
-  s2_0=1/12,    # truncation variance
   verbose=0
   )
 {
@@ -51,9 +49,6 @@ acdx <- function(
     family <- 0 # REGa model
     }
 
-  if(is.null(u_0))
-    u_0 <- 0.5* ac$min_nz
-
   if( !(norm_method == 1 || norm_method == 2) )
     norm_method <- 0
 
@@ -70,7 +65,6 @@ acdx <- function(
     alpha=double(n_sample*n_ctype*n_boot),
     beta=double(n_coef*n_gene*n_ctype*n_boot),
     phi=double(n_disp*n_gene*n_ctype*n_boot),
-    yeps=as.double(c(u_0,s2_0)),
     norm_method=as.integer(norm_method),
     iopt11=as.integer(c(family,verbose,acdx.ctrl$iter_max11)),
     dopt11=as.double(c(acdx.ctrl$epsilon11)),

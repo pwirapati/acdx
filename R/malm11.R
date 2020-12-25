@@ -1,13 +1,12 @@
 malm11 <- function( y, w = NULL, family=0,
-  iter_max=30, epsilon=1e-4,u_0=0,v_0=0,verbose=0 )
+  iter_max=30, epsilon=1e-4,verbose=0 )
 {
   n <- dim(y)[2]
   m <- dim(y)[3]
   if(is.null(w)) w <- rep(1,n)
-  if(length(u_0)==1) u_0 <- rep(u_0,n)
   r <- .C("malm11",
     dim=as.integer(c(n,m)),
-    y = as.double(y + c(rbind(u_0,v_0))),
+    y = as.double(y),
     w=as.double(w),
     E = as.double(rep(1,2*n*m)),
     alpha=as.double(ifelse(w==0,NA,1)),

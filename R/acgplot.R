@@ -115,7 +115,7 @@ acgplot <- function( ac, gene,
   if(conf.bar)
     {
     col.bar <- rep(col.dot,n_ctype)
-    cv <- sqrt(v)/(y+s)
+    cv <- sqrt(v+1/12/c(ac$N[o,]))/(y+s)
     ub <- exp( log(y+s) + 1.96*cv )
     lb <- exp( log(y+s) - 1.97*cv )
     for(i in 1:length(y))

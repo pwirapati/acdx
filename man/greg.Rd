@@ -22,18 +22,22 @@
     then it is considered an error. The both names are
     present, only the intersection are used, silently dropping
     the mismatches, and the ordering is not important.}
-  \item{u_0}{Constant shift from the origin}
-  \item{s2_0}{Baseline variance, with the default 1/12 equals to that of
-    the uniform distribution in an interval of width one.}
+  \item{u_0}{Constant shift from the origin. The default is 0.5
+    divided by the average number of cells per aggregate.}
+  \item{s2_0}{Baseline constant variance of the data. 
+    The default is 1/12 corresponding
+    to variance of uniform distribution in an interval with a width
+    equals to one.}
   \item{sep}{Column separator character; relevant only when \code{x} is
     a file of text table.}
   \item{verbose}{Output progress messages when performing the aggregation}
 }
 \details{
-  The summary for each gene in an aggregate is the mean of raw counts,
-  accompanied by an estimate of the variance of the mean (i.e., squared
-  standard error). This variance is estimated by the sample variance
-  plus \code{s2_0}, divided by the number of cells minus one.
+  The expression of each gene in an aggregate is summarized
+  by a pair of statistics: the mean of raw counts, and its variance
+  (i.e., squared standard error, which is the sample variance
+  divided by the number of cells). These pairs are the first
+  dimension of the array \code{y} in the output object.
 
   If the cell count is zero or one, the variance is infinite (the
   mean is set to zero or the single-cell value, respectively).
@@ -47,6 +51,11 @@
     the number of cells in each aggregate.}
   \item{y}{The aggregate array with four dimensions, corresponding
   to the summaries, samples, genes and cell types.}
+  \item{source}{A string describing the data source}
+  \item{min_nz}{The minimum of non-zero mean expression}
+  \item{gene_cv}{Gene-specific coefficient of variations}
+  \item{gene_scale}{Gene-specific scale factors}
+  \item{aggr_scale}{Aggregate-speicfic scale factors}
 }
 \examples{
   ## see the 'quick tutorial'
