@@ -160,7 +160,8 @@ greg <- function(
 
   if( is.null(u_0)) u_0 <- 0.5/mean(N)
 
-  y <- y + c( rbind( u_0, s2_0/c(N) ))
+  for(k in 1:ncol(N))
+    y[,,,k] <- y[,,,k] + c( rbind(u_0,s2_0/N[,k]))
 
   gene_mean <- apply(y[1,,,],2,mean,na.rm=T)
   gene_cv <- apply(y[1,,,],2,sd,na.rm=T)/gene_mean
