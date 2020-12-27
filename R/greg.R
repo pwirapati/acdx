@@ -156,24 +156,33 @@ greg <- function(
     src <- paste(class(x), deparse(substitute(x)))
     y <- x$y
     N <- x$N
+    n_sample <- dim(y)[2]
+    n_gene <- dim(y)[3]
+    n_ctype <- dim(y)[4]
     }
 
   if( is.null(u_0)) u_0 <- 0.5/mean(N)
 
+  gene_mean0 <- apply(y[1,,,],2,mean,na.rm=T)
+  gene_sd0 <- apply(y[1,,,],2,sd,na.rm=T)
+
   for(k in 1:ncol(N))
     y[,,,k] <- y[,,,k] + c( rbind(u_0,s2_0/N[,k]))
 
-  gene_mean <- apply(y[1,,,],2,mean,na.rm=T)
-  gene_cv <- apply(y[1,,,],2,sd,na.rm=T)/gene_mean
+  w <- apply(1/y[2,,,],2,sum,na.rm=T)
+  gene_wmean_u <- apply( y[1,,,]/y[2,,,],2,sum,na.rm=T)/w
+  gene_wmean_v <- apply( y[2,,,]/y[2,,,],2,sum,na.rm=T)/w
 
   # aggregate and gene scale factors
   gene_scale <- array(dim=c(n_gene,n_ctype))
+  gene_phi0 <- array(dim=c(n_gene,n_ctype))
   aggr_scale <- array(dim=c(n_sample,n_ctype))
 
   for(k in 1:n_ctype)
     {
     fit <- malm11( y[,,,k], w=ifelse(N[,k] > 1,1,0))
     gene_scale[,k] <- exp(fit$beta0)
+    gene_phi0[,k] <- exp(fit$phi0)
     aggr_scale[,k] <- exp(fit$alpha)
     }
 
@@ -184,9 +193,12 @@ greg <- function(
       source=src,
       u_0 = u_0,
       s2_0 = s2_0,
-      gene_mean = gene_mean,
-      gene_cv = gene_cv,
+      gene_mean0 = gene_mean0,
+      gene_sd0 = gene_sd0,
+      gene_wmean_u = gene_wmean_u,
+      gene_wmean_v = gene_wmean_v,
       gene_scale = gene_scale,
+      gene_phi0 = gene_phi0,
       aggr_scale = aggr_scale
       ),
    class="ac")

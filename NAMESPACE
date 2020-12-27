@@ -11,8 +11,8 @@ export(tab2spar)
 
 export(greg)
 S3method(print,ac)
-S3method(plot,ac)
-export(print.ac,plot.ac)
+export(print.ac)
+export(plot_ac_genesum,plot_ac_aggrsum)
 
 export(acgplot)
 export(acdx)

@@ -11,7 +11,7 @@ malm11 <- function( y, w = NULL, family=0,
     E = as.double(rep(1,2*n*m)),
     alpha=as.double(ifelse(w==0,NA,1)),
     beta0=as.double(rep(1,m)),
-    psi=as.double(rep(1,m)),
+    phi0=as.double(rep(1,m)),
     L=double(1),
     iopt=as.integer(c(family,verbose,iter_max)),
     dopt=as.double(c(epsilon)),
@@ -22,6 +22,6 @@ malm11 <- function( y, w = NULL, family=0,
   r$E <- NULL
   names(r$alpha) <- dimnames(y)[[2]]
   names(r$beta0) <- dimnames(y)[[3]]
-  names(r$psi) <- dimnames(y)[[3]]
+  names(r$phi0) <- dimnames(y)[[3]]
   r
 }

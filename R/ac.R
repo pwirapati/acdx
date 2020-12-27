@@ -10,36 +10,23 @@ print.ac <- function(x,...)
       sum(x$gene_mean==0)," (all zeroes))\n",sep="")
 }
 
-plot.ac <- function( x,... )
-{
-  arg <- list(...)
-  if(is.null(arg$type))
-    type <- "genesum"
-  else
-    type <- arg$type
-  
-  if(type == "genesum")
-    plot_ac_genesum( x, ... )
-  else if(type == "aggrsum" )
-    plot_ac_aggrsum( x, ... )
-  else
-    stop(paste0("plot.ac type: ",type," is not supported."))
-}
-
 plot_ac_genesum <- function(ac,cex=.25,pch=20,n_names=20,...)
 {
-  rcv <- range(ac$gene_cv[is.finite(ac$gene_cv)])
+  j <- (ac$gene_mean0 > 0)
+  gene_mean <- ac$gene_mean0[j]
+  gene_cv <- ac$gene_sd0[j]/gene_mean
+  rcv <- range(gene_cv)
   wcv <- (rcv[2]-rcv[1])/n_names
-  plot( log10(ac$gene_mean), ac$gene_cv,
+  plot( log10(gene_mean), gene_cv,
    xlab="gene mean", ylab="gene CV", axes=FALSE,
    cex=cex,pch=pch, ylim=c(0,rcv[2]),
     ,...)
   axis(side=2)
   axis(side=1,at=-5:5,labels=10^{-5:5})
   
-  gbin <- .bincode(ac$gene_cv,seq(rcv[1]-wcv,rcv[2]+wcv, wcv))
-  g <- tapply( ac$gene_mean, gbin, function(u) names(which.max(u)))
-  text( log10(ac$gene_mean[g]),ac$gene_cv[g],labels=g, adj=c(-.2,.5),xpd=TRUE)
+  gbin <- .bincode(gene_cv,seq(rcv[1]-wcv,rcv[2]+wcv, wcv))
+  g <- tapply( gene_mean, gbin, function(u) names(which.max(u)))
+  text( log10(gene_mean[g]),gene_cv[g],labels=g, adj=c(-.2,.5),xpd=TRUE)
 }
 
 plot_ac_aggrsum <- function( ac, o=NULL, s=1e-3, pad=2, ... )
