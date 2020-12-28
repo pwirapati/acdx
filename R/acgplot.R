@@ -23,6 +23,7 @@ acgplot <- function( ac, gene,
   las=c(0,0),
   legend.key=NULL,
   pbulk=F,
+  ylim=NULL,
   ...     # options to 'plot.default'
 )
 {
@@ -104,22 +105,25 @@ acgplot <- function( ac, gene,
       }
     }
 
-  ymax <- max(log(y+s),na.rm=TRUE)
+  if(is.null(ylim))
+    ylim <- c(log(s),max(log(y+s),na.rm=TRUE))
+  else
+    ylim <- log(s + ylim)
 
   plot( log(y+s), axes=FALSE,frame=TRUE, xlab="",
         ylab=paste(ifelse(adjusted,"adjusted","raw"),ifelse(pbulk,"pseudobulk",
             "mean"), "counts"),main=g,
-        xaxs="i",xlim=c(.5,length(y)+.5),ylim=c(log(s),ymax),
+        xaxs="i",xlim=c(.5,length(y)+.5),ylim=ylim,
         col=col.dot,cex=cex,pch=pch,... )
 
   if(conf.bar)
     {
     col.bar <- rep(col.dot,n_ctype)
-    cv <- sqrt(v+1/12/c(ac$N[o,]))/(y+s)
-    ub <- exp( log(y+s) + 1.96*cv )
-    lb <- exp( log(y+s) - 1.97*cv )
+    cv <- sqrt(v/(y^2+ac$s2_0/ac$N[o,]))
+    ub <- exp( log(y) + 1.96*cv )
+    lb <- exp( log(y) - 1.96*cv )
     for(i in 1:length(y))
-      lines( c(i,i), log(c(ub[i],lb[i])), col=col.bar[i],lty=lty.conf,
+      lines( c(i,i), log(s+c(ub[i],lb[i])), col=col.bar[i],lty=lty.conf,
       lwd=lwd.conf)
     }
 
