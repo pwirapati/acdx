@@ -16,21 +16,21 @@ uv;
 
 
 static inline void
-dset(int n, double *x, double c)
+d_set(int n, double *x, double c)
 {
   for(int i = 0; i < n; i++ )
     x[i] = c;
 }
 
 static inline void
-dcp(int n, const double *from, double *to)
+d_cp(int n, const double *from, double *to)
 {
   for(int i = 0; i < n; i++ )
     to[i] = from[i];
 }
 
 static inline void
-daccum(int n, double *y, const double *x)
+d_accum(int n, double *y, const double *x)
 {
   for(int i = 0; i < n; i++ )
     y[i] += x[i];
@@ -89,4 +89,18 @@ malm11(
   )
 ;
 
+extern void
+lm11(
+  const int *dim,
+  const uv *y,
+  const double *w,
+  uv *E,
+  double *alpha,
+  double *beta0,
+  double *phi0,
+  double *L_,
+  const int *iopt_,
+  const double *dopt_
+  )
+;
 #endif  // _MALM_H_

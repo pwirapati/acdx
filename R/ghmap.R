@@ -22,15 +22,14 @@ ghmap.ac <- function(ac,genes,
 
   if(is.null(o)) o <- 1:nrow(ac$N)
   genes <- rev(intersect(genes,dimnames(ac$y)[[3]]))
-  z <- aperm(ac$y[1,o,genes,],c(1,3,2))
-  dim(z) <- c(dim(z)[1]*dim(z)[2],dim(z)[3])
+  z <- collapse2dim( ac$y[1,o,genes,], c(1,3) )
+
   if(normalize[1])
     {
-    s <- c(ac$aggr_scale)
+    s <- c(ac$aggr_scale[o,])
     s <- ifelse(!is.finite(s),1,s)
     z <- z/s
     }
-  colnames(z) <- genes
 
   if(normalize[2]==TRUE)
     z <- apply(z,2,function(u) u/sqrt(sum(modnorm+u^2,na.rm=TRUE)))

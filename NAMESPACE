@@ -29,3 +29,4 @@ export(ghmap.ac)
 S3method(ghmap,ac)
 
 export(vdot)
+export(collapse2dim)

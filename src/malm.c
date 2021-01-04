@@ -41,7 +41,7 @@ malm_init(
   double d_adj
   )
 {
-  dset(p+p*(p+1)/2, S, 0);
+  d_set(p+p*(p+1)/2, S, 0);
   for(int i = 0; i < n; i++ )
     {
     if(w[i]==0) continue;
@@ -58,7 +58,7 @@ malm_init(
   nchol( p, H, NCHOL_AUTOTOL );
   nchol_fsub( p, H, S );
   nchol_bsub( p, H, S );
-  dcp(p, S, beta );
+  d_cp(p, S, beta );
   double Swrr[q];
   for(int a = 0; a < q; a++ ) Swrr[a]=0;
   for(int i = 0; i < n; i++ )
@@ -178,7 +178,7 @@ malm (
     int betaconv = 0, phiconv = 0;
     for(int iter = 1; iter <= iter_max; iter++ )
       {
-      dset( p+p*(p+1)/2, S, 0);
+      d_set( p+p*(p+1)/2, S, 0);
       for(int i = 0; i < n; i++ )
         {
         if(w[i]==0) continue;
@@ -213,7 +213,7 @@ malm (
         }
       
       double phi_t[q];
-      dcp( q, phi, phi_t);
+      d_cp( q, phi, phi_t);
       update_phi(n,q,w,Gi,phi_t,y,E,d_adj,family);
 
       Ltry = PLL(n,w,y,E);
@@ -227,7 +227,7 @@ malm (
         }
       for(int a = 0; a < p; a++ )
         beta[a] += S[a];
-      dcp( q, phi_t, phi );
+      d_cp( q, phi_t, phi );
       
       if(verbose == 2) mess("[%3d] %g (%+g)\n",iter,L, Ltry-L);
       if( fabs(Ltry - L)/(nnz - p - q) < epsilon )

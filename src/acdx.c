@@ -35,11 +35,11 @@ malm_acdx (
   double *alpha,      // n_sample x n_ctype x n_boot
   double *beta,       // n_coef x n_gene x n_ctype x n_boot
   double *phi,        // n_disp x n_gene x n_ctype x n_boot
-  const int *norm_method,
-  const int *iopt11_,
-  const double *dopt11_,
-  const int *iopt_,
-  const double *dopt_
+  const int *norm_method, // 0: none, 1: per cell type, 2: global
+  const int *iopt11_,     // integer options for row-column intercept model
+  const double *dopt11_,  // double options for row-column intercept model 
+  const int *iopt_,       // integer options for gene-wise model
+  const double *dopt_     // double options for gene-wise model
   )
 {
   int n_sample = dim[0];
