@@ -7,6 +7,6 @@ Depends: R (>= 3.5), Matrix, methods, abind
 Author: Pratyaksha Wirapati
 Maintainer: Pratyaksha Wirapati <pratyaksha.wirapati@sib.swiss>
 Description: This package performs aggregation, differential expression and visualization of single-cell expression profiles.
-License: GPL
+License: GPL (>=2)
 Packaged: 2020-12-10
 NeedsCompilation: yes
